@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Hospital</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script>tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#607afb", background: {light: "#f8fafc", dark: "#0b1120"}, foreground: {light: "#1e293b", dark: "#e2e8f0"}, card: {light: "#ffffff", dark: "#1e293b"}, border: {light: "#e2e8f0", dark: "#334155"}, input: {light: "#f1f5f9", dark: "#334155"}, "background-light": "#f5f6f8", "background-dark": "#0f1323"}, fontFamily: {sans: ["Inconsolata", "sans-serif"], display: "Space Grotesk"}, borderRadius: {DEFAULT: "0.5rem", lg: "1rem", xl: "1.5rem", full: "9999px"}, boxShadow: {soft: "0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05)"}}}};</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+        .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+        }
+        .dark .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        }
+    </style>
+</head>
+<body class="font-sans bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark">
+<div class="flex flex-col min-h-screen">
+<header class="sticky top-0 z-10 bg-card-light/80 dark:bg-card-dark/80 backdrop-blur-sm border-b border-border-light dark:border-border-dark shadow-soft">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16">
+<div class="flex items-center gap-4">
+<svg class="h-8 w-8 text-primary" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM13 10H11V16H13V10ZM13 6H11V8H13V6Z" fill-rule="evenodd"></path>
+</svg>
+<h1 class="text-xl font-bold tracking-wider">HMSA</h1>
+</div>
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCOY-ima_2mELBGTMhfeDLW8-ZN002zb993XYETTn5jOFajIevYfQYXqKyf10eRruxXARFm1iFAB7e1od-CSyRUDUaUbnn4rIAwWa3C5sZkcHYn_cabQG2NYPJYy8I88kUZNxoYfoDCZ2icXHwr4Z3723rr8Ndm1849T7EtwuKRIXybrEFpzC9pQu5KC1KCCBShMq-JCgM79EpGoDkmqbf_qBhcdEDvfUeZQsfEzu6spEIxVLj9f_2Bacwk2dYskPmV1Tg6L2jqEjo");'></div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-grow">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+<div class="max-w-2xl mx-auto">
+<div class="mb-8">
+<a class="text-sm text-primary hover:underline flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-base">arrow_back</span>
+                            Back to Hospitals
+                        </a>
+<h2 class="text-3xl md:text-4xl font-bold mt-2 text-foreground-light dark:text-foreground-dark">Create Hospital</h2>
+</div>
+<div class="bg-card-light dark:bg-card-dark p-6 sm:p-8 rounded-lg shadow-soft space-y-6">
+<div>
+<label class="block text-sm font-medium pb-2" for="hospital-name">Hospital Name <span class="text-red-500">*</span></label>
+<input class="w-full h-12 px-4 rounded-lg bg-input-light dark:bg-input-dark border border-border-light dark:border-border-dark focus:ring-2 focus:ring-primary focus:border-primary transition-shadow" id="hospital-name" placeholder="e.g., General Hospital" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium pb-2" for="country">Country <span class="text-red-500">*</span></label>
+<select class="form-select w-full h-12 px-4 rounded-lg bg-input-light dark:bg-input-dark border border-border-light dark:border-border-dark focus:ring-2 focus:ring-primary focus:border-primary transition-shadow appearance-none" id="country">
+<option>Select country</option>
+<option>United States</option>
+<option>Canada</option>
+<option>United Kingdom</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium pb-2" for="timezone">Timezone <span class="text-red-500">*</span></label>
+<select class="form-select w-full h-12 px-4 rounded-lg bg-input-light dark:bg-input-dark border border-border-light dark:border-border-dark focus:ring-2 focus:ring-primary focus:border-primary transition-shadow appearance-none" id="timezone">
+<option>Select timezone</option>
+<option>EST (Eastern Standard Time)</option>
+<option>PST (Pacific Standard Time)</option>
+<option>GMT (Greenwich Mean Time)</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium pb-2" for="admin-email">Admin Email <span class="text-red-500">*</span></label>
+<input class="w-full h-12 px-4 rounded-lg bg-input-light dark:bg-input-dark border border-border-light dark:border-border-dark focus:ring-2 focus:ring-primary focus:border-primary transition-shadow" id="admin-email" placeholder="admin@example.com" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-medium pb-2" for="temp-password">Temporary Password <span class="text-red-500">*</span></label>
+<div class="relative flex items-center">
+<input class="w-full h-12 px-4 rounded-lg bg-input-light dark:bg-input-dark border border-border-light dark:border-border-dark focus:ring-2 focus:ring-primary focus:border-primary transition-shadow pr-24" id="temp-password" placeholder="Generate or enter a password" type="password"/>
+<div class="absolute right-1 flex items-center space-x-1">
+<button class="h-10 px-2 rounded-md hover:bg-primary/10 text-primary text-sm font-semibold" type="button">Generate</button>
+<button class="h-10 w-10 flex items-center justify-center rounded-md hover:bg-primary/10 text-foreground-light/70 dark:text-foreground-dark/70" id="toggle-password" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row-reverse sm:items-center sm:justify-start gap-3 pt-4">
+<button class="w-full sm:w-auto flex items-center justify-center px-6 py-3 rounded-lg bg-primary text-white font-bold hover:bg-primary/90 transition-colors shadow-soft" type="submit">
+                                Create Hospital
+                            </button>
+<button class="w-full sm:w-auto flex items-center justify-center px-6 py-3 rounded-lg bg-transparent text-foreground-light dark:text-foreground-dark hover:bg-black/5 dark:hover:bg-white/5 font-semibold transition-colors border border-border-light dark:border-border-dark" type="button">
+                                Cancel
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+      const togglePassword = document.getElementById('toggle-password');
+      const passwordInput = document.getElementById('temp-password');
+      const icon = togglePassword.querySelector('span');
+      togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        icon.textContent = type === 'password' ? 'visibility' : 'visibility_off';
+      });
+    </script>
+</body></html>

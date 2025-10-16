@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Welcome to HMSA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#145D8F",
+            "background-light": "#f6f7f8",
+            "background-dark": "#111b21",
+            "foreground-light": "#0e161b",
+            "foreground-dark": "#f6f7f8",
+            "card-light": "#ffffff",
+            "card-dark": "#1a2a33",
+            "subtle-light": "#e8eff3",
+            "subtle-dark": "#2a3b47",
+            "border-light": "#d1dee6",
+            "border-dark": "#3a4b57",
+            "placeholder-light": "#507c95",
+            "placeholder-dark": "#a0b0c0",
+          },
+          fontFamily: {
+            "display": ["Saira", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "1rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          boxShadow: {
+            'soft': '0 4px 12px rgba(0, 0, 0, 0.05)',
+            'soft-dark': '0 4px 12px rgba(0, 0, 0, 0.15)',
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .font-display {
+      font-family: 'Saira', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-foreground-light dark:text-foreground-dark">
+<div class="flex flex-col min-h-screen">
+<header class="flex items-center justify-between px-10 py-4 border-b border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark">
+<div class="flex items-center gap-3">
+<svg class="text-primary" fill="none" height="32" viewBox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2L2 7V17L12 22L22 17V7L12 2ZM5.45 7.8L12 11.5L18.55 7.8L12 4.1L5.45 7.8ZM4 8.81V16.19L11 20.39V12.61L4 8.81ZM13 12.61V20.39L20 16.19V8.81L13 12.61Z" fill="currentColor"></path>
+</svg>
+<h1 class="text-xl font-bold text-foreground-light dark:text-foreground-dark">HMSA</h1>
+</div>
+</header>
+<main class="flex-grow flex items-center justify-center p-4 sm:p-6 md:p-8">
+<div class="w-full max-w-lg mx-auto">
+<div class="bg-card-light dark:bg-card-dark rounded-xl shadow-soft dark:shadow-soft-dark p-8 sm:p-10 lg:p-12">
+<div class="text-center">
+<h2 class="text-3xl sm:text-4xl font-bold text-foreground-light dark:text-foreground-dark tracking-tight">Welcome, Dr. Chen!</h2>
+<p class="mt-4 text-base font-normal text-placeholder-light dark:text-placeholder-dark">
+              Let's secure your account. Please create a new password to get started.
+            </p>
+</div>
+<form class="mt-8 space-y-6">
+<div class="space-y-1">
+<label class="text-sm font-medium text-foreground-light dark:text-foreground-dark" for="new-password">New Password</label>
+<input class="form-input w-full rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary placeholder-placeholder-light dark:placeholder-placeholder-dark py-3 px-4 text-base" id="new-password" name="new-password" placeholder="Enter a strong password" type="password"/>
+</div>
+<div class="space-y-1">
+<label class="text-sm font-medium text-foreground-light dark:text-foreground-dark" for="confirm-password">Confirm Password</label>
+<input class="form-input w-full rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary placeholder-placeholder-light dark:placeholder-placeholder-dark py-3 px-4 text-base" id="confirm-password" name="confirm-password" placeholder="Confirm your new password" type="password"/>
+</div>
+<div class="flex items-start p-3 bg-primary/10 dark:bg-primary/20 rounded-lg">
+<div class="flex-shrink-0">
+<svg aria-hidden="true" class="h-5 w-5 text-primary" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<div class="ml-3">
+<p class="text-sm font-medium text-primary/80 dark:text-primary/90">Password must be at least 8 characters long and include a mix of letters, numbers, and symbols.</p>
+</div>
+</div>
+<div>
+<button class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-bold text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-background-light dark:focus:ring-offset-background-dark transition-colors duration-200" type="submit">
+                Continue
+              </button>
+</div>
+</form>
+</div>
+</div>
+</main>
+<footer class="text-center py-4">
+<p class="text-sm text-placeholder-light dark:text-placeholder-dark">© 2024 HMSA. All rights reserved.</p>
+</footer>
+</div>
+
+</body></html>

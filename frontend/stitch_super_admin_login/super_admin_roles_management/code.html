@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Roles - HMSA</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#607afb", "background-light": "#f5f6f8", "background-dark": "#0f1323", "foreground-light": "#111827", "foreground-dark": "#d1d5db", "card-light": "#ffffff", "card-dark": "#1f2937", "border-light": "#e5e7eb", "border-dark": "#374151"}, fontFamily: {display: "Space Grotesk"}, borderRadius: {DEFAULT: "0.5rem", lg: "1rem", xl: "1.5rem", full: "9999px"}, boxShadow: {soft: "0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05)"}}}};</script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-foreground-light dark:text-foreground-dark">
+<div class="flex min-h-screen">
+<aside class="w-64 flex-shrink-0 bg-card-light dark:bg-card-dark p-6 flex flex-col justify-between shadow-soft">
+<div>
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<div class="bg-primary p-2 rounded-lg">
+<svg class="feather feather-activity" fill="none" height="24" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+</div>
+<h1 class="text-xl font-bold text-foreground-light dark:text-foreground-dark">MediCall</h1>
+</div>
+<button class="p-1 rounded-md hover:bg-background-light dark:hover:bg-background-dark">
+<svg class="text-foreground-light dark:text-foreground-dark" fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><line x1="3" x2="21" y1="12" y2="12"></line><line x1="3" x2="21" y1="6" y2="6"></line><line x1="3" x2="21" y1="18" y2="18"></line></svg>
+</button>
+</div>
+<nav class="space-y-2">
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-foreground-light/70 dark:text-foreground-dark/70 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><rect height="7" width="7" x="3" y="3"></rect><rect height="7" width="7" x="14" y="3"></rect><rect height="7" width="7" x="14" y="14"></rect><rect height="7" width="7" x="3" y="14"></rect></svg>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-foreground-light/70 dark:text-foreground-dark/70 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect height="4" rx="1" ry="1" width="8" x="8" y="2"></rect></svg>
+<span class="font-medium">Hospitals</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-foreground-light/70 dark:text-foreground-dark/70 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+<span class="font-medium">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary font-medium transition-colors" href="#">
+<svg fill="currentColor" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+<span class="font-medium">Roles</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-foreground-light/70 dark:text-foreground-dark/70 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+<span class="font-medium">Monitoring</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-foreground-light/70 dark:text-foreground-dark/70 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+<svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+<span class="font-medium">Settings</span>
+</a>
+</nav>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<img alt="Super Admin profile picture" class="size-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqKoIbVM6E0nQsl6s129yYfzTHqjIwvHNzaHbHyknZuDMNVXWmDcviom0J7hPQ0E_WjXXtaPXoGMfvfIzu8CbRLsH74pywxgJWSg50Hn24SnFzSXO_X6tDg___kqflTsvVClqtfpKTArrWRBAp5oxkx-Vk6DGnO0-9P1OMu0Vl0wqnJEQdPnK6y-4RCMJLxZyv5vlLj2ftR4Kvf5Xa2Tv2ia09MyUz3ls-LH7cbNsd_5AxFZqjUEIRGnevTsw-2piO1Sf8qoljfR0"/>
+<div>
+<p class="font-semibold text-foreground-light dark:text-foreground-dark">admin@medicall.com</p>
+<p class="text-sm text-foreground-light/70 dark:text-foreground-dark/70">Super Admin</p>
+</div>
+</div>
+<button class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-foreground-light/70 dark:text-foreground-dark/70 hover:bg-red-500/10 dark:hover:bg-red-400/20 hover:text-red-500 dark:hover:text-red-400 transition-colors">
+<svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>
+<span class="font-medium">Logout</span>
+</button>
+</div>
+</aside>
+<main class="flex-1 p-8 overflow-y-auto">
+<div class="max-w-7xl mx-auto">
+<div class="flex items-center justify-between mb-8">
+<h1 class="text-3xl font-bold text-foreground-light dark:text-foreground-dark">Roles Management</h1>
+<button class="bg-primary text-white font-semibold py-2.5 px-5 rounded-lg shadow-soft hover:bg-primary/90 transition-all flex items-center gap-2">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><line x1="12" x2="12" y1="5" y2="19"></line><line x1="5" x2="19" y1="12" y2="12"></line></svg>
+<span>Add New Role</span>
+</button>
+</div>
+<div class="bg-card-light dark:bg-card-dark rounded-xl shadow-soft overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-background-light dark:bg-background-dark">
+<tr>
+<th class="p-5 text-sm font-semibold text-foreground-light/80 dark:text-foreground-dark/80 uppercase tracking-wider">Role Name</th>
+<th class="p-5 text-sm font-semibold text-foreground-light/80 dark:text-foreground-dark/80 uppercase tracking-wider">Description</th>
+<th class="p-5 text-sm font-semibold text-foreground-light/80 dark:text-foreground-dark/80 uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-light dark:divide-border-dark">
+<tr>
+<td class="p-5 whitespace-nowrap">
+<div class="font-medium text-foreground-light dark:text-foreground-dark">Super Admin</div>
+</td>
+<td class="p-5">
+<div class="text-foreground-light/80 dark:text-foreground-dark/80">Full access to all features and settings.</div>
+</td>
+<td class="p-5 whitespace-nowrap text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 text-primary transition-colors">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-500/10 dark:hover:bg-red-400/20 text-red-500 dark:text-red-400 transition-colors">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+</button>
+</div>
+</td>
+</tr>
+<tr>
+<td class="p-5 whitespace-nowrap">
+<div class="font-medium text-foreground-light dark:text-foreground-dark">Hospital Admin</div>
+</td>
+<td class="p-5">
+<div class="text-foreground-light/80 dark:text-foreground-dark/80">Manages hospital-specific settings and users.</div>
+</td>
+<td class="p-5 whitespace-nowrap text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 text-primary transition-colors">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-500/10 dark:hover:bg-red-400/20 text-red-500 dark:text-red-400 transition-colors">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+</button>
+</div>
+</td>
+</tr>
+<tr>
+<td class="p-5 whitespace-nowrap">
+<div class="font-medium text-foreground-light dark:text-foreground-dark">Clinician</div>
+</td>
+<td class="p-5">
+<div class="text-foreground-light/80 dark:text-foreground-dark/80">Access to patient records and scheduling.</div>
+</td>
+<td class="p-5 whitespace-nowrap text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 text-primary transition-colors">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-500/10 dark:hover:bg-red-400/20 text-red-500 dark:text-red-400 transition-colors">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+</button>
+</div>
+</td>
+</tr>
+<tr>
+<td class="p-5 whitespace-nowrap">
+<div class="font-medium text-foreground-light dark:text-foreground-dark">Patient</div>
+</td>
+<td class="p-5">
+<div class="text-foreground-light/80 dark:text-foreground-dark/80">Access to personal health information and appointments.</div>
+</td>
+<td class="p-5 whitespace-nowrap text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 text-primary transition-colors">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-500/10 dark:hover:bg-red-400/20 text-red-500 dark:text-red-400 transition-colors">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+</button>
+</div>
+</td>
+</tr>
+<tr>
+<td class="p-5 whitespace-nowrap">
+<div class="font-medium text-foreground-light dark:text-foreground-dark">Support Staff</div>
+</td>
+<td class="p-5">
+<div class="text-foreground-light/80 dark:text-foreground-dark/80">Limited access for administrative tasks.</div>
+</td>
+<td class="p-5 whitespace-nowrap text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 text-primary transition-colors">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-500/10 dark:hover:bg-red-400/20 text-red-500 dark:text-red-400 transition-colors">
+<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

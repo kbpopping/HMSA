@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#14628f',
+              'background-light': '#f6f7f8',
+              'background-dark': '#111b21',
+              'content-light': '#ffffff',
+              'content-dark': '#1a2a33',
+              'text-light': '#0a1014',
+              'text-dark': '#e2e8f0',
+              'text-muted-light': '#64748b',
+              'text-muted-dark': '#94a3b8',
+              'border-light': '#e2e8f0',
+              'border-dark': '#334155',
+            },
+            fontFamily: {
+              display: ['Saira', 'sans-serif'],
+            },
+            borderRadius: {
+              DEFAULT: '0.75rem',
+              lg: '1rem',
+              xl: '1.5rem',
+              full: '9999px',
+            },
+            boxShadow: {
+              soft: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05)',
+            },
+          },
+        },
+      };
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+<div class="flex h-screen w-full">
+<aside class="w-64 flex-shrink-0 bg-content-light dark:bg-content-dark shadow-soft">
+<div class="p-6 flex items-center gap-3">
+<div class="bg-primary p-2 rounded-lg">
+<svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"></path>
+</svg>
+</div>
+<h1 class="text-xl font-bold">HMSA</h1>
+</div>
+<nav class="mt-8 px-4">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-text-muted-light dark:text-text-muted-dark hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-white" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 mt-2 rounded-lg text-text-muted-light dark:text-text-muted-dark hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-white" href="#">
+<span class="material-symbols-outlined">folder_shared</span>
+<span>Patient Records</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 mt-2 rounded-lg text-text-muted-light dark:text-text-muted-dark hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-white" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span>Appointments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 mt-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-white font-semibold" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span>Billing &amp; Financials</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 mt-2 rounded-lg text-text-muted-light dark:text-text-muted-dark hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-white" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span>Reporting &amp; Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 mt-2 rounded-lg text-text-muted-light dark:text-text-muted-dark hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-white" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</aside>
+<div class="flex-1 flex flex-col overflow-hidden">
+<header class="flex items-center justify-end whitespace-nowrap border-b border-border-light dark:border-border-dark px-8 py-4 bg-content-light dark:bg-content-dark">
+<div class="flex items-center gap-6">
+<button class="text-text-muted-light dark:text-text-muted-dark hover:text-primary dark:hover:text-white">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB3uYtmZkXLbuxRGtKliDZJFatzXN8pnim8YaOVx0ccXWERVT7cnIV70xzd260RdKnCTFmINhRI7-4hC62ovKsiRm0LIbQ3gP29aYc-0WD_sgOFT7fQMXFwTNyY9vUYMC8shnXaC815sHqHk0rRxzjIJoNAJMzOuo2-IHLqZ0F4YsVy1fdSQ15XvptwA_TLZcjEQ9iPhjDFmNsk8CPJsOik0mRPdLVWW0_yf5YeZFfAa_K0CpeAsrM7t8K7gNsEMZWzgtAAAVQnzAk");'></div>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto p-8">
+<div class="max-w-7xl mx-auto">
+<div class="mb-8">
+<h2 class="text-3xl font-bold text-text-light dark:text-text-dark">Billing &amp; Financials</h2>
+<p class="text-text-muted-light dark:text-text-muted-dark mt-1">Manage all financial transactions, including invoices, payments, and financial reports.</p>
+</div>
+<div class="border-b border-border-light dark:border-border-dark mb-6">
+<nav class="flex gap-8 -mb-px">
+<a class="py-3 px-1 border-b-2 border-transparent text-text-muted-light dark:text-text-muted-dark hover:border-primary hover:text-primary" href="#">Accounts Receivable</a>
+<a class="py-3 px-1 border-b-2 border-primary text-primary font-semibold" href="#">Accounts Payable</a>
+<a class="py-3 px-1 border-b-2 border-transparent text-text-muted-light dark:text-text-muted-dark hover:border-primary hover:text-primary" href="#">Financial Reports</a>
+</nav>
+</div>
+<div class="bg-content-light dark:bg-content-dark p-6 rounded-lg shadow-soft">
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+<div class="relative flex-1 max-w-md">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-text-muted-light dark:text-text-muted-dark">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="w-full pl-12 pr-4 py-3 rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary transition" placeholder="Search by Vendor, Invoice Number..." type="search"/>
+</div>
+<div class="flex items-center gap-3 flex-wrap">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark hover:border-primary hover:text-primary transition">
+<span>Status</span>
+<span class="material-symbols-outlined text-base">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark hover:border-primary hover:text-primary transition">
+<span>Category</span>
+<span class="material-symbols-outlined text-base">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark hover:border-primary hover:text-primary transition">
+<span>Date Range</span>
+<span class="material-symbols-outlined text-base">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition shadow-soft">
+<span class="material-symbols-outlined">add</span>
+<span>Add Bill/Expense</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-border-light dark:border-border-dark">
+<th class="p-4 font-semibold">Vendor/Supplier</th>
+<th class="p-4 font-semibold">Invoice Number</th>
+<th class="p-4 font-semibold">Amount Due</th>
+<th class="p-4 font-semibold">Due Date</th>
+<th class="p-4 font-semibold">Status</th>
+<th class="p-4 font-semibold">Category</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-border-light dark:border-border-dark hover:bg-background-light dark:hover:bg-background-dark">
+<td class="p-4 font-medium">MedSupply Co.</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">INV-2024-001</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">$5,000.00</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">2024-07-15</td>
+<td class="p-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300">Pending</span>
+</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">Supplies</td>
+</tr>
+<tr class="border-b border-border-light dark:border-border-dark hover:bg-background-light dark:hover:bg-background-dark">
+<td class="p-4 font-medium">Office Solutions Inc.</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">INV-2024-002</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">$1,200.00</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">2024-07-20</td>
+<td class="p-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">Paid</span>
+</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">Operational Costs</td>
+</tr>
+<tr class="border-b border-border-light dark:border-border-dark hover:bg-background-light dark:hover:bg-background-dark">
+<td class="p-4 font-medium">Utility Services Ltd.</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">INV-2024-003</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">$800.00</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">2024-07-25</td>
+<td class="p-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300">Overdue</span>
+</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">Utilities</td>
+</tr>
+<tr class="border-b border-border-light dark:border-border-dark hover:bg-background-light dark:hover:bg-background-dark">
+<td class="p-4 font-medium">Tech Support Group</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">INV-2024-004</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">$2,500.00</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">2024-08-01</td>
+<td class="p-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300">Pending</span>
+</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">Overhead Costs</td>
+</tr>
+<tr class="hover:bg-background-light dark:hover:bg-background-dark">
+<td class="p-4 font-medium">Cleaning Crew LLC</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">INV-2024-005</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">$600.00</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">2024-08-05</td>
+<td class="p-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">Paid</span>
+</td>
+<td class="p-4 text-text-muted-light dark:text-text-muted-dark">Operational Costs</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+</body></html>

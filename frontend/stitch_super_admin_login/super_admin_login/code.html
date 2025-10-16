@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Super Admin Login - HMSA</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+    .font-inconsolata {
+      font-family: 'Inconsolata', monospace;
+    }
+  </style>
+<script>tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#607AFB", "background-light": "#f5f6f8", "background-dark": "#0f1323", "foreground-light": "#1A202C", "foreground-dark": "#EDF2F7", "card-light": "#FFFFFF", "card-dark": "#2D3748", "border-light": "#E2E8F0", "border-dark": "#4A5568", "placeholder-light": "#A0AEC0", "placeholder-dark": "#718096", error: "#E53E3E", success: "#38A169"}, fontFamily: {display: "Space Grotesk"}, borderRadius: {DEFAULT: "0.5rem", lg: "1rem", xl: "1.5rem", full: "9999px"}, boxShadow: {soft: "0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07)"}}}};</script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-foreground-light dark:text-foreground-dark antialiased">
+<div class="relative min-h-screen">
+<div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBn7QtPHVEe0T9tg3Uay7j-T-cPYEI8eFsK9ltRQeDo6eSpF_zuD0obKUrVXnHmE_hqP1bafZDf8yVQOVDJJB57fwee1VU7cyzhCioOYEQPjN0ZtJFADch7Swqe1jgrJ0j-idgk_fQconX_ay2HCiVUmqGjLXY9IbNImhqw93biyQ8PokDOxz8cJo2pMT8w0Kd9SeKxIN5WR0O7wF69T7k4vY4GbXf8DrrsC-zGJFxISdPyIh5IiIJqmFx0owAYrfxrg3aX7oLy-mE');">
+<div class="absolute inset-0 bg-black/50"></div>
+</div>
+<div class="relative flex min-h-screen flex-col items-center justify-center p-4">
+<div class="w-full max-w-md">
+<div class="mb-8 text-center">
+<svg class="mx-auto h-16 w-16 text-primary" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"></path>
+</svg>
+<h1 class="mt-4 text-4xl font-bold text-white">HMSA</h1>
+<p class="mt-2 text-xl text-gray-200">Super Admin Login</p>
+</div>
+<div class="rounded-xl bg-card-light/90 dark:bg-card-dark/90 backdrop-blur-sm p-10 shadow-soft">
+<form class="space-y-8">
+<div>
+<label class="block text-lg font-bold text-foreground-light dark:text-foreground-dark" for="email">Email</label>
+<div class="mt-2">
+<input autocomplete="email" class="block w-full appearance-none rounded-DEFAULT border border-border-light bg-background-light px-4 py-4 text-lg placeholder-placeholder-light shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-card-light dark:border-border-dark dark:bg-background-dark dark:placeholder-placeholder-dark dark:focus:ring-offset-card-dark" id="email" name="email" placeholder="you@example.com" required="" type="email"/>
+</div>
+</div>
+<div>
+<label class="block text-lg font-bold text-foreground-light dark:text-foreground-dark" for="password">Password</label>
+<div class="mt-2">
+<input autocomplete="current-password" class="block w-full appearance-none rounded-DEFAULT border border-border-light bg-background-light px-4 py-4 text-lg placeholder-placeholder-light shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-card-light dark:border-border-dark dark:bg-background-dark dark:placeholder-placeholder-dark dark:focus:ring-offset-card-dark" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<div class="flex items-center justify-end">
+<div class="text-base">
+<a class="font-medium text-primary hover:text-primary/80" href="#">Forgot your password?</a>
+</div>
+</div>
+<div>
+<button class="flex w-full justify-center rounded-lg bg-primary px-4 py-4 text-lg font-bold text-white shadow-soft transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-card-light dark:focus:ring-offset-card-dark" type="submit">
+                Login
+              </button>
+</div>
+</form>
+<div class="mt-6 text-center">
+<p class="text-base text-gray-600 dark:text-gray-300">Don't have an account? <a class="font-bold text-primary hover:text-primary/80" href="#">Sign Up</a></p>
+</div>
+</div>
+<div class="mt-8 text-center">
+<a class="text-base text-gray-300 hover:text-white" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+</div>
+</body></html>

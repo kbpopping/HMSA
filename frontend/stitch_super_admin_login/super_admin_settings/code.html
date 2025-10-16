@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Super Admin Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;500;700&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<script>tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#607AFB", "background-light": "#f5f6f8", "background-dark": "#0f1323", "foreground-light": "#111827", "foreground-dark": "#f9fafb", "card-light": "#ffffff", "card-dark": "#1f2937", "border-light": "#e5e7eb", "border-dark": "#374151", "muted-foreground-light": "#6b7280", "muted-foreground-dark": "#9ca3b0", "input-light": "#ffffff", "input-dark": "#1f2937"}, fontFamily: {display: "Space Grotesk"}, borderRadius: {DEFAULT: "0.5rem", lg: "1rem", xl: "1.5rem", full: "9999px"}, boxShadow: {soft: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05)"}}}};</script>
+<style>
+        body {
+            font-family: 'Inconsolata', monospace;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex min-h-screen">
+<aside class="w-64 bg-card-light dark:bg-card-dark p-4 flex-col border-r border-border-light dark:border-border-dark hidden lg:flex">
+<div class="flex items-center gap-3 mb-6 px-2">
+<div class="bg-primary rounded-lg size-8 flex items-center justify-center text-white font-bold text-lg">H</div>
+<h1 class="text-foreground-light dark:text-foreground-dark text-xl font-bold">HMSA</h1>
+<button class="ml-auto text-muted-foreground-light dark:text-muted-foreground-dark">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h16M4 12h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-muted-foreground-light dark:text-muted-foreground-dark hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary transition-colors" href="#">
+<svg class="feather feather-layout-dashboard" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><rect height="9" width="7" x="3" y="3"></rect><rect height="5" width="7" x="14" y="3"></rect><rect height="9" width="7" x="14" y="12"></rect><rect height="5" width="7" x="3" y="16"></rect></svg>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-muted-foreground-light dark:text-muted-foreground-dark hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary transition-colors" href="#">
+<svg class="feather feather-hospital" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 11h4"></path><path d="M14 9v4"></path></svg>
+<span>Hospitals</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-muted-foreground-light dark:text-muted-foreground-dark hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary transition-colors" href="#">
+<svg class="feather feather-users" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+<span>Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-muted-foreground-light dark:text-muted-foreground-dark hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary transition-colors" href="#">
+<svg class="feather feather-shield" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+<span>Roles</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-muted-foreground-light dark:text-muted-foreground-dark hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary transition-colors" href="#">
+<svg class="feather feather-activity" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+<span>Monitoring</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary font-bold" href="#">
+<svg class="feather feather-settings" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+<span>Settings</span>
+</a>
+</nav>
+<div class="mt-auto">
+<div class="p-4 rounded-lg bg-background-light dark:bg-background-dark mb-2">
+<div class="flex items-center gap-3">
+<img alt="User avatar" class="size-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8KguHNdVG3U4bzmr5ziz42qm92XRYtr0-RiReZi_hLUGtgRuyz4onE7BuFofRQnwJckExjOHmhpw9K4at5eGuN0gmFN7MuwUhPxVL6AlY0GukWxKIFTCPAgU8FoGq2bUNbPtsebDZfnQZJhw-Y4K7KUzObjQvoOE0jSDdSgCsYkXQsEeF3zhr3i3nUgoNt-cSuewDWTskg_bPOjc4y3TFjqO4qWN2jBs7Bf64gVKWvK1GUFGHmhwnAwwI9F4F5Ja8zyuwrL3qcOU"/>
+<div>
+<p class="text-sm font-bold text-foreground-light dark:text-foreground-dark">Super Admin</p>
+<p class="text-xs text-muted-foreground-light dark:text-muted-foreground-dark">admin@hmsa.com</p>
+</div>
+</div>
+</div>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-muted-foreground-light dark:text-muted-foreground-dark hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary transition-colors" href="#">
+<svg class="feather feather-log-out" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<main class="flex-1 p-6 md:p-10 bg-background-light dark:bg-background-dark">
+<div class="max-w-4xl mx-auto">
+<h1 class="text-3xl font-bold text-foreground-light dark:text-foreground-dark mb-8">Settings</h1>
+<div class="space-y-12">
+<section>
+<h2 class="text-xl font-bold text-foreground-light dark:text-foreground-dark mb-4">Profile</h2>
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg shadow-soft border border-border-light dark:border-border-dark">
+<div class="flex items-center gap-6">
+<div class="relative">
+<img alt="User avatar" class="size-20 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8KguHNdVG3U4bzmr5ziz42qm92XRYtr0-RiReZi_hLUGtgRuyz4onE7BuFofRQnwJckExjOHmhpw9K4at5eGuN0gmFN7MuwUhPxVL6AlY0GukWxKIFTCPAgU8FoGq2bUNbPtsebDZfnQZJhw-Y4K7KUzObjQvoOE0jSDdSgCsYkXQsEeF3zhr3i3nUgoNt-cSuewDWTskg_bPOjc4y3TFjqO4qWN2jBs7Bf64gVKWvK1GUFGHmhwnAwwI9F4F5Ja8zyuwrL3qcOU"/>
+<button class="absolute -bottom-1 -right-1 bg-primary text-white rounded-full p-1.5 shadow-soft hover:bg-primary/80 transition-colors">
+<svg class="feather feather-camera" fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+</button>
+</div>
+<div>
+<p class="text-lg font-bold text-foreground-light dark:text-foreground-dark">Super Admin</p>
+<p class="text-muted-foreground-light dark:text-muted-foreground-dark">admin@hmsa.com</p>
+</div>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-xl font-bold text-foreground-light dark:text-foreground-dark mb-4">Theme</h2>
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg shadow-soft border border-border-light dark:border-border-dark">
+<p class="text-muted-foreground-light dark:text-muted-foreground-dark mb-4">Select your preferred interface theme.</p>
+<div class="flex gap-4">
+<label class="flex-1 cursor-pointer">
+<input checked="" class="peer sr-only" name="theme" type="radio"/>
+<div class="p-4 rounded-lg border-2 border-border-light dark:border-border-dark peer-checked:border-primary text-center transition-colors">
+<svg class="feather feather-sun mx-auto mb-2 text-muted-foreground-light dark:text-muted-foreground-dark peer-checked:text-primary" fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="5"></circle><line x1="12" x2="12" y1="1" y2="3"></line><line x1="12" x2="12" y1="21" y2="23"></line><line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line><line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line><line x1="1" x2="3" y1="12" y2="12"></line><line x1="21" x2="23" y1="12" y2="12"></line><line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line><line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line></svg>
+<span class="font-medium text-foreground-light dark:text-foreground-dark">Light</span>
+</div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input class="peer sr-only" name="theme" type="radio"/>
+<div class="p-4 rounded-lg border-2 border-border-light dark:border-border-dark peer-checked:border-primary text-center transition-colors">
+<svg class="feather feather-moon mx-auto mb-2 text-muted-foreground-light dark:text-muted-foreground-dark peer-checked:text-primary" fill="none" height="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+<span class="font-medium text-foreground-light dark:text-foreground-dark">Dark</span>
+</div>
+</label>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-xl font-bold text-foreground-light dark:text-foreground-dark mb-4">Security</h2>
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-lg shadow-soft border border-border-light dark:border-border-dark flex items-center justify-between">
+<div>
+<h3 class="font-bold text-foreground-light dark:text-foreground-dark">Sign Out of All Sessions</h3>
+<p class="text-muted-foreground-light dark:text-muted-foreground-dark mt-1">This will sign you out of all other active sessions on other devices.</p>
+</div>
+<button class="bg-primary/20 text-primary font-bold py-2 px-6 rounded-lg hover:bg-primary/30 transition-colors">
+                            Sign Out
+                        </button>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</body></html>

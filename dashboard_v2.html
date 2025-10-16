@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Analytics Dashboard v2 — Local Demo</title>
+  <style>
+    :root { --fg:#111; --muted:#666; --card:#fff; --bg:#f6f8fa; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--fg); }
+    .wrap { max-width: 1160px; margin: 24px auto; padding: 0 16px; }
+    h1 { font-size: 28px; margin: 8px 0 16px; }
+    .grid { display: grid; grid-template-columns: repeat(12,1fr); gap: 16px; }
+    .card { background: var(--card); border:1px solid #e5e7eb; border-radius: 14px; padding:16px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
+    .kpi { grid-column: span 3; }
+    .kpi h3 { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+    .kpi .val { font-size: 28px; font-weight: 700; }
+    .row { display:flex; gap:16px; }
+    .flex-2 { flex:2; }
+    .flex-1 { flex:1; }
+    canvas { width: 100%; height: 280px; border-radius: 8px; background:#fff; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { text-align:left; padding:8px; border-bottom:1px solid #eee; font-size: 14px; }
+    .bar { height: 12px; background:#c7d2fe; border-radius:6px; }
+    .muted { color: var(--muted); font-size: 12px; }
+    .ts { margin-top:4px; font-size:12px; color:var(--muted); }
+    .controls { gap: 8px; align-items: end; display: grid; grid-template-columns: repeat(12, 1fr); margin-bottom: 12px; }
+    .controls .field { grid-column: span 2; }
+    .controls .field.wide { grid-column: span 3; }
+    label { font-size: 12px; color: var(--muted); display:block; margin-bottom:4px; }
+    input { width: 100%; padding: 10px; border:1px solid #ddd; border-radius:8px; }
+    button { padding:10px 14px; border:none; border-radius:8px; background:#1f6feb; color:#fff; cursor:pointer; }
+    button.secondary { background:#64748b; }
+    .pill { display:inline-block; background:#eef2ff; color:#3730a3; padding:6px 10px; border-radius:999px; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Analytics Dashboard v2 — Local Demo</h1>
+
+    <div class="card">
+      <div class="controls">
+        <div class="field"><label>Start</label><input type="date" id="start"></div>
+        <div class="field"><label>End</label><input type="date" id="end"></div>
+        <div class="field"><label>Clinician ID</label><input type="number" id="clinician_id" placeholder="e.g. 1"></div>
+        <div class="field"><label>Clinic ID</label><input type="number" id="clinic_id" placeholder="optional"></div>
+        <div class="field wide"><label>Token</label><input type="password" id="token" placeholder="X-DASH-TOKEN"></div>
+        <div class="field"><button id="apply">Apply</button></div>
+        <div class="field"><button id="export" class="secondary">Export CSV</button></div>
+      </div>
+      <span class="muted">Tip: set a token in n8n env var <code>DASH_TOKEN</code> (e.g., via docker-compose) then enter it here. Stored in localStorage.</span>
+    </div>
+
+    <div class="grid" style="margin-top:12px;">
+      <div class="card kpi"><h3>Total (range)</h3><div class="val" id="kpi-total">—</div></div>
+      <div class="card kpi"><h3>Confirmed Rate</h3><div class="val" id="kpi-conf">—%</div></div>
+      <div class="card kpi"><h3>No‑Show Rate</h3><div class="val" id="kpi-noshow">—%</div></div>
+      <div class="card kpi"><h3>Avg Lead Time</h3><div class="val" id="kpi-lead">— h</div></div>
+    </div>
+
+    <div class="row" style="margin-top:16px;">
+      <div class="card flex-2">
+        <h3 style="margin-top:0;">Appointments by Day</h3>
+        <canvas id="line"></canvas>
+        <div class="ts" id="generatedAt"></div>
+      </div>
+      <div class="card flex-1">
+        <h3 style="margin-top:0;">Provider Breakdown</h3>
+        <table>
+          <thead><tr><th>Channel</th><th>Provider</th><th>Sent</th><th>Failed</th></tr></thead>
+          <tbody id="provBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="ts">Range: <span id="rangePill" class="pill">—</span></p>
+  </div>
+
+<script>
+const API = 'http://localhost:5678/webhook/metrics';
+
+function saveToken(t){ localStorage.setItem('dash_token', t); }
+function loadToken(){ return localStorage.getItem('dash_token') || ''; }
+
+function toCSV(rows){
+  if(!rows.length) return '';
+  const cols = Object.keys(rows[0]);
+  const esc = v => {
+    if (v == null) return '';
+    const s = String(v);
+    if (/[",\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+    return s;
+  };
+  const header = cols.join(',');
+  const lines = rows.map(r => cols.map(c => esc(r[c])).join(','));
+  return [header, ...lines].join('\n');
+}
+
+function exportCSV(data){
+  // Merge timeseries and provider breakdown into one CSV file with two sections
+  const ts = data.timeseries || [];
+  const prov = data.providerBreakdown || [];
+  const parts = [];
+  parts.push('Timeseries (day, booked, confirmed, cancelled, no_show)');
+  parts.push(toCSV(ts));
+  parts.push('');
+  parts.push('Provider Breakdown (channel, provider, sent, failed)');
+  parts.push(toCSV(prov));
+  const blob = new Blob([parts.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `metrics_${(data.range?.start||'start')}_${(data.range?.end||'end')}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+async function loadMetrics(){
+  const start = document.getElementById('start').value;
+  const end = document.getElementById('end').value;
+  const clinician_id = document.getElementById('clinician_id').value;
+  const clinic_id = document.getElementById('clinic_id').value;
+  const token = document.getElementById('token').value;
+
+  const params = new URLSearchParams();
+  if (start) params.set('start', start);
+  if (end) params.set('end', end);
+  if (clinician_id) params.set('clinician_id', clinician_id);
+  if (clinic_id) params.set('clinic_id', clinic_id);
+
+  const res = await fetch(API + (params.toString() ? ('?' + params.toString()) : ''), {
+    headers: {'X-DASH-TOKEN': token}
+  });
+  if (!res.ok) {
+    alert('Metrics request failed: ' + res.status + ' — check your token and n8n is running.');
+    return;
+  }
+  const data = await res.json();
+  render(data);
+  window.__lastMetrics = data; // for CSV export
+}
+
+function render(data){
+  // KPIs
+  const t = data.totals || {total:0, confirmed:0, cancelled:0, no_show:0};
+  document.getElementById('kpi-total').textContent = t.total ?? 0;
+  document.getElementById('kpi-conf').textContent = (data.kpis?.confirmedRatePct ?? 0) + '%';
+  document.getElementById('kpi-noshow').textContent = (data.kpis?.noShowRatePct ?? 0) + '%';
+  document.getElementById('kpi-lead').textContent = (data.kpis?.avgHoursToAppt ?? '—') + ' h';
+  document.getElementById('generatedAt').textContent = 'Generated at ' + new Date(data.generatedAt).toLocaleString();
+  document.getElementById('rangePill').textContent = (data.range?.start || 'start') + ' → ' + (data.range?.end || 'end');
+
+  // Provider table
+  const tb = document.getElementById('provBody');
+  tb.innerHTML = '';
+  (data.providerBreakdown || []).forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.channel}</td><td>${r.provider}</td><td>${r.sent}</td><td>${r.failed}</td>`;
+    tb.appendChild(tr);
+  });
+
+  // Line chart
+  const ctx = document.getElementById('line').getContext('2d');
+  const series = data.timeseries || [];
+  const booked = series.map(s => s.booked || 0);
+  const confirmed = series.map(s => s.confirmed || 0);
+  const cancelled = series.map(s => s.cancelled || 0);
+  const noshow = series.map(s => s.no_show || 0);
+  const ymax = Math.max(5, ...booked, ...confirmed, ...cancelled, ...noshow);
+  const ratio = window.devicePixelRatio || 1;
+  ctx.canvas.width = ctx.canvas.clientWidth * ratio;
+  ctx.canvas.height = ctx.canvas.clientHeight * ratio;
+  ctx.scale(ratio, ratio);
+  const left = 40, right = 10, top = 10, bottom = 24;
+  const w = ctx.canvas.clientWidth - left - right;
+  const h = ctx.canvas.clientHeight - top - bottom;
+  ctx.clearRect(0,0,ctx.canvas.clientWidth,ctx.canvas.clientHeight);
+  ctx.strokeStyle = '#eee'; ctx.lineWidth = 1;
+  for(let i=0;i<=5;i++){ const y = top + h - (h * i/5); ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(left+w, y); ctx.stroke(); }
+  ctx.fillStyle = '#666'; ctx.font = '12px system-ui';
+  for(let i=0;i<=5;i++){ const val = Math.round(ymax * i/5); const y = top + h - (h * i/5); ctx.fillText(val.toString(), 4, y+4); }
+
+  function plot(values, color){
+    ctx.strokeStyle = color; ctx.lineWidth = 2;
+    ctx.beginPath();
+    values.forEach((v, i) => {
+      const x = left + (w * (i/(Math.max(1,values.length-1))));
+      const y = top + h - (v / ymax * h);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  }
+  plot(booked, '#94a3b8');     // slate
+  plot(confirmed, '#22c55e');  // green
+  plot(cancelled, '#f59e0b');  // amber
+  plot(noshow, '#ef4444');     // red
+}
+
+document.getElementById('apply').onclick = () => {
+  const token = document.getElementById('token').value.trim();
+  if(token) saveToken(token);
+  loadMetrics();
+};
+document.getElementById('export').onclick = () => {
+  if(window.__lastMetrics) exportCSV(window.__lastMetrics);
+  else alert('No data yet. Click Apply first.');
+};
+
+// Initialize controls from localStorage
+(function init(){
+  const t = loadToken(); if (t) document.getElementById('token').value = t;
+  const end = new Date(); const start = new Date(end.getTime() - 29*24*3600*1000);
+  const pad = n => String(n).padStart(2,'0');
+  const fmt = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  document.getElementById('start').value = fmt(start);
+  document.getElementById('end').value = fmt(end);
+  loadMetrics();
+})();
+</script>
+</body>
+</html>

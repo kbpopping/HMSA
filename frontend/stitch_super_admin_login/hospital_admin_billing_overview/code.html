@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#14628f",
+              "background-light": "#f6f7f8",
+              "background-dark": "#111b21",
+              "content-light": "#ffffff",
+              "content-dark": "#1a2a33",
+              "text-primary-light": "#0e161b",
+              "text-primary-dark": "#ffffff",
+              "text-secondary-light": "#507c95",
+              "text-secondary-dark": "#a0b3c1",
+              border: "#e8eff3",
+              "border-dark": "#2d3f4b",
+              "positive-light": "#078836",
+              "positive-dark": "#34d399",
+            },
+            fontFamily: {
+              display: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "12px",
+              lg: "16px",
+              full: "9999px",
+            },
+            boxShadow: {
+              soft: "0 4px 12px 0 rgba(0, 0, 0, 0.07)",
+              "soft-dark": "0 4px 12px 0 rgba(0, 0, 0, 0.15)",
+            },
+          },
+        },
+      };
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-primary-light dark:text-text-primary-dark">
+<div class="flex min-h-screen">
+<aside class="w-80 bg-background-light dark:bg-background-dark p-4 flex flex-col justify-between">
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-3 px-3">
+<img alt="Hospital Logo" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpush5shbuPBmOY_JEb_evr2pP66blLulRQMdn0LYEh4NbdsHtEQ-3UKgd1TwnEnn6zLVaeclzBKldoaBQS6a_VxNPJ-dWk6QJKN9KwuRkrfX5b-czhoo9cuGZetyt6_8DhzobuObd-9lmjJdUlfv5x1nN9r_6OB-jBSz6-llK3FzZXASBs1-Tix_t4S51hl4H_VGUVXqWF3hrDTujNbha8P7E3LImI8ezOmjWQcGAIqw2t27sIA8aeWMmh0Qf2cG2nQ3McKOTcVg"/>
+<div>
+<h1 class="font-bold text-base">Evercare Hospital</h1>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Admin</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">folder_shared</span>
+<span class="font-medium text-sm">Patient Records</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">calendar_month</span>
+<span class="font-medium text-sm">Appointment Scheduling</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">groups</span>
+<span class="font-medium text-sm">Staff Management</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-medium text-sm">Billing &amp; Financials</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+</nav>
+</div>
+<div class="px-3 py-2.5">
+<a class="flex items-center gap-3 hover:bg-primary/10 dark:hover:bg-primary/20 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark">logout</span>
+<span class="font-medium text-sm">Logout</span>
+</a>
+</div>
+</aside>
+<main class="flex-1 p-8 bg-background-light dark:bg-background-dark">
+<div class="max-w-7xl mx-auto">
+<div class="flex justify-between items-center mb-8">
+<h1 class="text-3xl font-bold">Billing &amp; Financials Overview</h1>
+<button class="flex items-center gap-2 px-4 py-2.5 bg-primary text-white rounded-lg shadow-soft hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-base">download</span>
+<span class="font-medium text-sm">Download Report (CSV)</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="bg-content-light dark:bg-content-dark p-6 rounded-lg shadow-soft dark:shadow-soft-dark">
+<p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">Total Earnings</p>
+<p class="text-3xl font-bold mt-2">$1,250,000</p>
+</div>
+<div class="bg-content-light dark:bg-content-dark p-6 rounded-lg shadow-soft dark:shadow-soft-dark">
+<p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">Total Revenue</p>
+<p class="text-3xl font-bold mt-2">$1,500,000</p>
+</div>
+<div class="bg-content-light dark:bg-content-dark p-6 rounded-lg shadow-soft dark:shadow-soft-dark">
+<p class="text-base font-medium text-text-secondary-light dark:text-text-secondary-dark">Accounts Receivable</p>
+<p class="text-3xl font-bold mt-2">$250,000</p>
+</div>
+</div>
+<div class="bg-content-light dark:bg-content-dark p-6 rounded-lg shadow-soft dark:shadow-soft-dark mb-8">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+<h2 class="text-xl font-bold">Revenue Generated</h2>
+<div class="mt-4 sm:mt-0 bg-background-light dark:bg-background-dark p-1 rounded-lg flex items-center">
+<label class="cursor-pointer py-1.5 px-4 rounded-md text-sm font-medium has-[:checked]:bg-content-light dark:has-[:checked]:bg-content-dark has-[:checked]:text-primary has-[:checked]:shadow-sm text-text-secondary-light dark:text-text-secondary-dark transition-all">
+<span>Daily</span>
+<input class="hidden" name="timeframe" type="radio" value="Daily"/>
+</label>
+<label class="cursor-pointer py-1.5 px-4 rounded-md text-sm font-medium has-[:checked]:bg-content-light dark:has-[:checked]:bg-content-dark has-[:checked]:text-primary has-[:checked]:shadow-sm text-text-secondary-light dark:text-text-secondary-dark transition-all">
+<span>Weekly</span>
+<input class="hidden" name="timeframe" type="radio" value="Weekly"/>
+</label>
+<label class="cursor-pointer py-1.5 px-4 rounded-md text-sm font-medium has-[:checked]:bg-content-light dark:has-[:checked]:bg-content-dark has-[:checked]:text-primary has-[:checked]:shadow-sm text-text-secondary-light dark:text-text-secondary-dark transition-all">
+<span>Monthly</span>
+<input checked="" class="hidden" name="timeframe" type="radio" value="Monthly"/>
+</label>
+<label class="cursor-pointer py-1.5 px-4 rounded-md text-sm font-medium has-[:checked]:bg-content-light dark:has-[:checked]:bg-content-dark has-[:checked]:text-primary has-[:checked]:shadow-sm text-text-secondary-light dark:text-text-secondary-dark transition-all">
+<span>Yearly</span>
+<input class="hidden" name="timeframe" type="radio" value="Yearly"/>
+</label>
+</div>
+</div>
+<div>
+<div class="flex items-start gap-4 mb-4">
+<div>
+<p class="text-4xl font-bold">$125,000</p>
+<div class="flex items-center gap-2">
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">This Month</p>
+<p class="text-sm font-medium text-positive-light dark:text-positive-dark">+15%</p>
+</div>
+</div>
+</div>
+<div class="h-64 flex items-end gap-4">
+<div class="flex flex-col items-center gap-2 h-full flex-1">
+<div class="w-full bg-primary/10 dark:bg-primary/20 rounded-t-lg h-full flex items-end">
+<div class="bg-primary w-full rounded-t-lg" style="height: 40%"></div>
+</div>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Jan</span>
+</div>
+<div class="flex flex-col items-center gap-2 h-full flex-1">
+<div class="w-full bg-primary/10 dark:bg-primary/20 rounded-t-lg h-full flex items-end">
+<div class="bg-primary w-full rounded-t-lg" style="height: 70%"></div>
+</div>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Feb</span>
+</div>
+<div class="flex flex-col items-center gap-2 h-full flex-1">
+<div class="w-full bg-primary/10 dark:bg-primary/20 rounded-t-lg h-full flex items-end">
+<div class="bg-primary w-full rounded-t-lg" style="height: 80%"></div>
+</div>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Mar</span>
+</div>
+<div class="flex flex-col items-center gap-2 h-full flex-1">
+<div class="w-full bg-primary/10 dark:bg-primary/20 rounded-t-lg h-full flex items-end">
+<div class="bg-primary w-full rounded-t-lg" style="height: 10%"></div>
+</div>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Apr</span>
+</div>
+<div class="flex flex-col items-center gap-2 h-full flex-1">
+<div class="w-full bg-primary/10 dark:bg-primary/20 rounded-t-lg h-full flex items-end">
+<div class="bg-primary w-full rounded-t-lg" style="height: 90%"></div>
+</div>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">May</span>
+</div>
+<div class="flex flex-col items-center gap-2 h-full flex-1">
+<div class="w-full bg-primary/10 dark:bg-primary/20 rounded-t-lg h-full flex items-end">
+<div class="bg-primary w-full rounded-t-lg" style="height: 30%"></div>
+</div>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Jun</span>
+</div>
+<div class="flex flex-col items-center gap-2 h-full flex-1">
+<div class="w-full bg-primary/10 dark:bg-primary/20 rounded-t-lg h-full flex items-end">
+<div class="bg-primary w-full rounded-t-lg" style="height: 60%"></div>
+</div>
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Jul</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-content-light dark:bg-content-dark p-6 rounded-lg shadow-soft dark:shadow-soft-dark">
+<h2 class="text-xl font-bold mb-4">Top Revenue Contributors</h2>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-border dark:border-border-dark">
+<th class="py-3 px-4 font-semibold text-sm text-text-secondary-light dark:text-text-secondary-dark">Service</th>
+<th class="py-3 px-4 font-semibold text-sm text-text-secondary-light dark:text-text-secondary-dark text-right">Revenue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-border dark:border-border-dark">
+<td class="py-4 px-4 text-sm font-medium">Consultation</td>
+<td class="py-4 px-4 text-sm text-text-secondary-light dark:text-text-secondary-dark text-right">$300,000</td>
+</tr>
+<tr class="border-b border-border dark:border-border-dark">
+<td class="py-4 px-4 text-sm font-medium">Surgery</td>
+<td class="py-4 px-4 text-sm text-text-secondary-light dark:text-text-secondary-dark text-right">$250,000</td>
+</tr>
+<tr class="border-b border-border dark:border-border-dark">
+<td class="py-4 px-4 text-sm font-medium">Lab Tests</td>
+<td class="py-4 px-4 text-sm text-text-secondary-light dark:text-text-secondary-dark text-right">$200,000</td>
+</tr>
+<tr class="border-b border-border dark:border-border-dark">
+<td class="py-4 px-4 text-sm font-medium">Imaging</td>
+<td class="py-4 px-4 text-sm text-text-secondary-light dark:text-text-secondary-dark text-right">$150,000</td>
+</tr>
+<tr>
+<td class="py-4 px-4 text-sm font-medium">Therapy</td>
+<td class="py-4 px-4 text-sm text-text-secondary-light dark:text-text-secondary-dark text-right">$100,000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

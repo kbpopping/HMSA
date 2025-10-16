@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#14628f",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111b21",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="flex min-h-screen">
+<aside class="w-64 bg-white dark:bg-gray-900/50 p-6 flex flex-col justify-between shadow-lg">
+<div>
+<div class="flex items-center gap-3 mb-8">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA_uhBxA5C1o8V1cyAKBaSy1a56hOaGtQM8CIURpQrX7X1vK14joO8981Q9XJkVO-LcTfZOW5MU14AzLkuj0HWpgf5xEVhtG2Z_Ux_PEG7P6ISK5m-Ige0MpZfC_peIE5Dhsn8QF2_PvMyBVnIIJfB9qD0fQ8xuSMnKJz-YJ_qqkYGDcPgy1LVWy6JHJjXQAQIBJkfqzhhMfAri0yM0nMqklEcXaJFuGLhjnVCyHIj4QjneCQfP6CSyRj81CrjTc9YCwznOGUTJUtk");'></div>
+<h1 class="text-lg font-semibold text-gray-900 dark:text-white">Dr. Amelia Harper</h1>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-white transition-all duration-300" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-white transition-all duration-300" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-medium">Schedule</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-white transition-all duration-300" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-medium">Patients</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary dark:text-white font-semibold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">paid</span>
+<span class="font-medium">My Earnings</span>
+</a>
+</nav>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary dark:hover:text-white transition-all duration-300" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</nav>
+</aside>
+<main class="flex-1 p-8">
+<div class="max-w-7xl mx-auto">
+<header class="flex items-center justify-between mb-8">
+<h1 class="text-4xl font-bold text-gray-900 dark:text-white">My Earnings</h1>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg shadow-md hover:bg-primary/90 transition-all duration-300">
+<span class="material-symbols-outlined">download</span>
+<span class="font-medium">Download Statements</span>
+</button>
+</header>
+<section class="mb-8">
+<h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Earnings Summary</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-white dark:bg-gray-900/50 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+<p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Last Payout</p>
+<p class="text-3xl font-bold text-gray-900 dark:text-white">$2,500.00</p>
+<p class="text-xs text-gray-400 dark:text-gray-500 mt-1">on June 15, 2024</p>
+</div>
+<div class="bg-white dark:bg-gray-900/50 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+<p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Next Payout</p>
+<p class="text-3xl font-bold text-gray-900 dark:text-white">July 15, 2024</p>
+<p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Estimated Amount: $2,850.00</p>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Payout History</h2>
+<div class="bg-white dark:bg-gray-900/50 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+<tr>
+<th class="px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Date</th>
+<th class="px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Service/Period</th>
+<th class="px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider text-right">Amount</th>
+<th class="px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider text-center">Status</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">June 15, 2024</td>
+<td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">Bi-Weekly Payout (Jun 1 - Jun 14)</td>
+<td class="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white font-medium text-right">$2,500.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
+                                            Completed
+                                        </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-primary hover:underline">View</button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">June 1, 2024</td>
+<td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">Bi-Weekly Payout (May 16 - May 31)</td>
+<td class="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white font-medium text-right">$2,350.50</td>
+<td class="px-6 py-4 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
+                                            Completed
+                                        </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-primary hover:underline">View</button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">May 15, 2024</td>
+<td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">Bi-Weekly Payout (May 1 - May 14)</td>
+<td class="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white font-medium text-right">$2,420.00</td>
+<td class="px-6 py-4 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
+                                            Completed
+                                        </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-primary hover:underline">View</button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">May 1, 2024</td>
+<td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">Bi-Weekly Payout (Apr 16 - Apr 30)</td>
+<td class="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white font-medium text-right">$2,610.75</td>
+<td class="px-6 py-4 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
+                                            Completed
+                                        </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-primary hover:underline">View</button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+<td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">April 15, 2024</td>
+<td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">Bi-Weekly Payout (Apr 1 - Apr 14)</td>
+<td class="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-white font-medium text-right">$2,490.25</td>
+<td class="px-6 py-4 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300">
+                                            Completed
+                                        </span>
+</td>
+<td class="px-6 py-4 whitespace-nowrap text-right">
+<button class="text-primary hover:underline">View</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+</div>
+
+</body></html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Onboarding Complete</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#14628f",
+            "background-light": "#f6f7f8",
+            "background-dark": "#111b21",
+            "foreground-light": "#0f172a",
+            "foreground-dark": "#f8fafc",
+            "card-light": "#ffffff",
+            "card-dark": "#1e293b",
+            "subtle-light": "#e2e8f0",
+            "subtle-dark": "#334155",
+            "success": "#22c55e"
+          },
+          fontFamily: {
+            "display": ["Saira", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.75rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          boxShadow: {
+            'soft': '0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07)',
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+      'FILL' 1,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24
+    }
+  </style>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark">
+<div class="flex min-h-screen w-full items-center justify-center p-4">
+<div class="w-full max-w-md text-center">
+<div class="bg-card-light dark:bg-card-dark p-8 sm:p-12 rounded-xl shadow-soft">
+<div class="mb-6 flex justify-center">
+<div class="bg-success/10 dark:bg-success/20 p-4 rounded-full">
+<span class="material-symbols-outlined text-success" style="font-size: 48px;">
+                    task_alt
+                 </span>
+</div>
+</div>
+<h1 class="text-2xl sm:text-3xl font-bold text-foreground-light dark:text-foreground-dark mb-2">Congratulations!</h1>
+<p class="text-foreground-light dark:text-foreground-dark/80 mb-8">Your onboarding is complete and your account is ready.</p>
+<a class="block w-full bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-primary/90 transition-colors duration-300 shadow-sm" href="#">
+          Go to Dashboard
+        </a>
+<div class="mt-8 flex items-center justify-center space-x-6 text-sm">
+<a class="text-foreground-light dark:text-foreground-dark/60 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+            Quick Tour
+           </a>
+<span class="text-subtle-light dark:text-subtle-dark">|</span>
+<a class="text-foreground-light dark:text-foreground-dark/60 hover:text-primary dark:hover:text-primary transition-colors" href="#">
+            FAQs
+           </a>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

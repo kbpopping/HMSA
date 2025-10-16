@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hospital Admin - Clinicians</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#14628f",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111b21",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2a33",
+                        "text-primary-light": "#0e161b",
+                        "text-primary-dark": "#ffffff",
+                        "text-secondary-light": "#507c95",
+                        "text-secondary-dark": "#a0b8c7",
+                        "border-light": "#e0e7ec",
+                        "border-dark": "#334e5f",
+                    },
+                    fontFamily: {
+                        display: ["Saira", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "12px",
+                        lg: "16px",
+                        xl: "20px",
+                        full: "9999px",
+                    },
+                    boxShadow: {
+                        soft: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05)",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+        }
+        .group .group-hover\:block {
+            display: none;
+        }
+        .group:hover .group-hover\:block {
+            display: block;
+        }
+        .group .group-hover\:bg-primary\/5:hover {
+            background-color: rgba(20, 98, 143, 0.05);
+        }
+        .dark .group .group-hover\:bg-primary\/10:hover {
+            background-color: rgba(20, 98, 143, 0.1);
+        }
+    </style>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark">
+<div class="flex min-h-screen">
+<aside class="w-64 bg-surface-light dark:bg-surface-dark flex flex-col border-r border-border-light dark:border-border-dark shadow-soft">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-white"> menu </span>
+</div>
+<h1 class="text-xl font-bold">HMSA</h1>
+</div>
+<nav class="flex-1 px-4 py-2">
+<ul class="space-y-2">
+<li class="group">
+<div class="flex items-center justify-between gap-3 px-4 py-3 rounded-lg cursor-pointer bg-primary/10 dark:bg-primary/20 text-primary">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined"> group </span>
+<span class="font-medium">Staff</span>
+</div>
+<span class="material-symbols-outlined transition-transform group-hover:rotate-180"> expand_more </span>
+</div>
+<ul class="pt-2 pl-4 space-y-1">
+<li><a class="block px-4 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary font-medium" href="#">Clinicians</a></li>
+<li><a class="block px-4 py-2 rounded-lg hover:bg-primary/5 dark:hover:bg-primary/10 text-text-secondary-light dark:text-text-secondary-dark" href="#">Nurses</a></li>
+<li><a class="block px-4 py-2 rounded-lg hover:bg-primary/5 dark:hover:bg-primary/10 text-text-secondary-light dark:text-text-secondary-dark" href="#">Cleaners</a></li>
+<li><a class="block px-4 py-2 rounded-lg hover:bg-primary/5 dark:hover:bg-primary/10 text-text-secondary-light dark:text-text-secondary-dark" href="#">Security</a></li>
+<li><a class="block px-4 py-2 rounded-lg hover:bg-primary/5 dark:hover:bg-primary/10 text-text-secondary-light dark:text-text-secondary-dark" href="#">Admin</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+<div class="p-4 border-t border-border-light dark:border-border-dark">
+<div class="flex items-center gap-3 p-2 rounded-lg">
+<img alt="User profile picture" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPLvc9LDADzTxhO5me2q8xzlZjUOMw_O5aEioFdvBTxqKR7MaVT0V5GY0aVC-1BSQYPxM37L7kQ5EL7ChqGegCDfuvB1g8kaywOMBehxWL0oE09R7tIQ7NH-FB-x-OXO7cVCjkuwyeQ6-VrrtNlLIiuhpRzLux4AeGSmzz7SPZgPdAWR9UGEc65zA_6eHCIEYsLTZlS5fu-pW5FqS6yw64NsCGjY0Q4KezyNzbUTjWVKmNte9GwNfCirBRVrkwVBPgP3QM7umQsNU"/>
+<div>
+<p class="font-semibold">Jane Doe</p>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Hospital Admin</p>
+</div>
+<button class="ml-auto text-text-secondary-light dark:text-text-secondary-dark hover:text-primary dark:hover:text-primary">
+<span class="material-symbols-outlined"> logout </span>
+</button>
+</div>
+</div>
+</aside>
+<main class="flex-1 p-8 bg-background-light dark:bg-background-dark">
+<div class="max-w-7xl mx-auto">
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-4xl font-bold text-text-primary-light dark:text-text-primary-dark">Clinicians</h2>
+<button class="bg-primary text-white font-medium px-6 py-3 rounded-lg shadow-soft hover:bg-primary/90 transition-colors flex items-center gap-2" id="add-clinician-btn">
+<span class="material-symbols-outlined"> add </span> Add Clinician
+                    </button>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-soft overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-border-light dark:border-border-dark">
+<th class="p-4 text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Name</th>
+<th class="p-4 text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Specialty</th>
+<th class="p-4 text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Email</th>
+<th class="p-4 text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Phone</th>
+<th class="p-4 text-sm font-bold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Created</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-light dark:divide-border-dark">
+<tr>
+<td class="p-4 font-medium text-text-primary-light dark:text-text-primary-dark">Dr. Amelia Harper</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Cardiology</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">amelia.harper@example.com</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">(555) 123-4567</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">2023-08-15</td>
+</tr>
+<tr>
+<td class="p-4 font-medium text-text-primary-light dark:text-text-primary-dark">Dr. Benjamin Carter</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Neurology</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">benjamin.carter@example.com</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">(555) 987-6543</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">2023-09-22</td>
+</tr>
+<tr>
+<td class="p-4 font-medium text-text-primary-light dark:text-text-primary-dark">Dr. Chloe Bennett</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Pediatrics</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">chloe.bennett@example.com</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">(555) 246-8013</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">2023-10-10</td>
+</tr>
+<tr>
+<td class="p-4 font-medium text-text-primary-light dark:text-text-primary-dark">Dr. Daniel Evans</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Oncology</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">daniel.evans@example.com</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">(555) 135-7924</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">2023-11-05</td>
+</tr>
+<tr>
+<td class="p-4 font-medium text-text-primary-light dark:text-text-primary-dark">Dr. Eleanor Foster</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">Dermatology</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">eleanor.foster@example.com</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">(555) 369-1215</td>
+<td class="p-4 text-text-secondary-light dark:text-text-secondary-dark">2023-12-01</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+<div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300 opacity-0 pointer-events-none" id="add-clinician-modal">
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-soft w-full max-w-md p-8 transform scale-95 transition-transform duration-300" id="modal-content">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark">Add New Clinician</h3>
+<button class="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary dark:hover:text-primary" id="close-modal-btn">
+<span class="material-symbols-outlined"> close </span>
+</button>
+</div>
+<form class="space-y-6">
+<div>
+<label class="block text-sm font-medium mb-2 text-text-secondary-light dark:text-text-secondary-dark" for="name">Name <span class="text-red-500">*</span></label>
+<input class="w-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" id="name" name="name" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium mb-2 text-text-secondary-light dark:text-text-secondary-dark" for="specialty">Specialty</label>
+<input class="w-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" id="specialty" name="specialty" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium mb-2 text-text-secondary-light dark:text-text-secondary-dark" for="email">Email</label>
+<input class="w-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" id="email" name="email" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-medium mb-2 text-text-secondary-light dark:text-text-secondary-dark" for="phone">Phone</label>
+<input class="w-full bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" id="phone" name="phone" type="tel"/>
+</div>
+<div class="flex justify-end gap-4 pt-4">
+<button class="bg-transparent text-text-secondary-light dark:text-text-secondary-dark font-medium px-6 py-3 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors" id="cancel-btn" type="button">
+                        Cancel
+                    </button>
+<button class="bg-primary text-white font-medium px-6 py-3 rounded-lg shadow-soft hover:bg-primary/90 transition-colors" type="submit">Create Clinician</button>
+</div>
+</form>
+</div>
+</div>
+<script>
+        const addClinicianBtn = document.getElementById("add-clinician-btn");
+        const addClinicianModal = document.getElementById("add-clinician-modal");
+        const modalContent = document.getElementById("modal-content");
+        const closeModalBtn = document.getElementById("close-modal-btn");
+        const cancelBtn = document.getElementById("cancel-btn");
+        function openModal() {
+            addClinicianModal.classList.remove("opacity-0", "pointer-events-none");
+            modalContent.classList.remove("scale-95");
+        }
+        function closeModal() {
+            modalContent.classList.add("scale-95");
+            addClinicianModal.classList.add("opacity-0");
+            setTimeout(() => {
+                addClinicianModal.classList.add("pointer-events-none");
+            }, 300); // Wait for transition to finish
+        }
+        addClinicianBtn.addEventListener("click", openModal);
+        closeModalBtn.addEventListener("click", closeModal);
+        cancelBtn.addEventListener("click", closeModal);
+        // Close modal if clicking outside of the content
+        addClinicianModal.addEventListener("click", (event) => {
+            if (event.target === addClinicianModal) {
+                closeModal();
+            }
+        });
+        // Close modal on escape key press
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") {
+                closeModal();
+            }
+        });
+        // Sidebar dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const staffGroup = document.querySelector('.group');
+            const subMenu = staffGroup.querySelector('ul');
+            subMenu.style.display = 'block'; // Keep it open by default as it's the active page
+            staffGroup.addEventListener('click', function(e) {
+                // Prevent closing when clicking on sub-menu items
+                if (e.target.tagName === 'A' && e.target.parentElement.parentElement === subMenu) {
+                    return;
+                }
+                const isHidden = subMenu.style.display === 'none';
+                subMenu.style.display = isHidden ? 'block' : 'none';
+                const icon = staffGroup.querySelector('.material-symbols-outlined.transition-transform');
+                icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+            });
+        });
+    </script>
+
+</body></html>

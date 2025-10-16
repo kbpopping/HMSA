@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Availability &amp; Preferences - HMSA Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#14628f",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111b21",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2a33",
+                        "text-light": "#0e161b",
+                        "text-dark": "#e1e3e4",
+                        "text-muted-light": "#6b7280",
+                        "text-muted-dark": "#9ca3af",
+                        "border-light": "#e5e7eb",
+                        "border-dark": "#374151"
+                    },
+                    fontFamily: {
+                        "display": ["Saira", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.75rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05)',
+                        'soft-dark': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+                    }
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark;
+            }
+        }
+        @layer components {
+            .input-base {
+                @apply w-full h-12 px-4 rounded-DEFAULT bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors duration-200 placeholder:text-text-muted-light dark:placeholder:text-text-muted-dark;
+            }
+            .checkbox-label {
+                 @apply relative flex items-center gap-4 cursor-pointer p-4 rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark transition-all duration-200 hover:border-primary/50;
+            }
+            .checkbox-label input:checked ~ .checkbox-custom-bg {
+                @apply border-primary bg-primary;
+            }
+             .checkbox-label input:checked ~ .checkbox-custom-bg .checkbox-tick {
+                @apply opacity-100;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+<div class="flex flex-col min-h-screen">
+<header class="sticky top-0 z-10 w-full bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-sm border-b border-border-light dark:border-border-dark">
+<div class="container mx-auto px-6 py-3 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 text-primary">
+<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.5a.5.5 0 0 1 .5.5v2.5a.5.5 0 0 1-1 0V3a.5.5 0 0 1 .5-.5ZM12 5.5a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5ZM12 18.5a.5.5 0 0 1 .5.5v2.5a.5.5 0 0 1-1 0V19a.5.5 0 0 1 .5-.5ZM19 12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2a.5.5 0 0 1 .5-.5ZM5 12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2a.5.5 0 0 1 .5-.5ZM17.293 6.707a.5.5 0 0 1 .707 0l1.768 1.768a.5.5 0 0 1 0 .707l-1.768 1.768a.5.5 0 0 1-.707-.707L18.086 8.5l-1.499-1.499a.5.5 0 0 1 0-.294ZM6.707 6.707a.5.5 0 0 1 0 .294L5.208 8.5l1.499 1.499a.5.5 0 0 1-.707.707L4.232 8.939a.5.5 0 0 1 0-.707L6 6.707a.5.5 0 0 1 .707 0ZM17.293 17.293a.5.5 0 0 1 .707 0l1.768-1.768a.5.5 0 0 1 0-.707l-1.768-1.768a.5.5 0 0 1-.707.707L18.086 15.5l-1.499 1.499a.5.5 0 0 1 0 .294ZM6.707 17.293a.5.5 0 0 1 0-.294l1.499-1.499-1.499-1.499a.5.5 0 0 1-.707-.707L6 15.061a.5.5 0 0 1 0 .707L4.232 17.293a.5.5 0 0 1 .707.707Z"></path></svg>
+</div>
+<h1 class="text-xl font-bold tracking-tight">HMSA Onboarding</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-sm font-medium text-text-muted-light dark:text-text-muted-dark">Dr. Evelyn Reed</span>
+<img alt="User avatar" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8aFpu0PvL1kAAp6PtV382MwCG87LzH8hEplrwG0vEypdqFoQ4-XOb2-pbFKnf0MsKGqx94hG9oGJUJwbC6euClizPD1PFIdbYQS3DLjXcqa2NGIJ3JBH94Zr-DHsuXMInhYBICPiX-kvKold2rjNhv-T9CCRZwQGSlNddUQolnpCt2tMzjGh7ShgUImMIzbYTmncnftcsoLFbFiH_Hs7uVyP4Uler0WFdKiXiQj3neiHo_jj0yqel10ByzNIlvIitPdZzeu05NVI"/>
+</div>
+</div>
+</header>
+<main class="flex-grow container mx-auto px-6 py-10 flex items-center justify-center">
+<div class="w-full max-w-4xl space-y-12">
+<div class="text-center">
+<p class="text-sm font-semibold uppercase tracking-wider text-primary">Step 2 of 4</p>
+<h2 class="text-4xl font-bold mt-2 text-text-light dark:text-text-dark">Availability &amp; Preferences</h2>
+<p class="mt-4 text-lg max-w-2xl mx-auto text-text-muted-light dark:text-text-muted-dark">Set your standard working hours and how you'd like to be notified. You can always change this later in your profile settings.</p>
+</div>
+<div class="space-y-8 bg-surface-light dark:bg-surface-dark p-8 rounded-xl shadow-soft dark:shadow-soft-dark border border-border-light dark:border-border-dark">
+<section>
+<h3 class="text-xl font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">schedule</span>
+                            Working Hours
+                        </h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Define your weekly schedule. Mark days off by leaving times blank.</p>
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+<div class="contents">
+<span class="font-medium text-text-muted-light dark:text-text-muted-dark md:col-span-2 pt-2">Monday</span>
+<div class="grid grid-cols-2 gap-4">
+<label>
+<span class="text-sm font-medium">Start Time</span>
+<input class="input-base mt-1" type="time" value="09:00"/>
+</label>
+<label>
+<span class="text-sm font-medium">End Time</span>
+<input class="input-base mt-1" type="time" value="17:00"/>
+</label>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<label>
+<span class="text-sm font-medium">Break Start</span>
+<input class="input-base mt-1" type="time" value="12:30"/>
+</label>
+<label>
+<span class="text-sm font-medium">Break End</span>
+<input class="input-base mt-1" type="time" value="13:30"/>
+</label>
+</div>
+</div>
+<div class="contents">
+<span class="font-medium text-text-muted-light dark:text-text-muted-dark md:col-span-2 pt-2">Tuesday</span>
+<div class="grid grid-cols-2 gap-4">
+<label>
+<span class="text-sm font-medium">Start Time</span>
+<input class="input-base mt-1" type="time" value="09:00"/>
+</label>
+<label>
+<span class="text-sm font-medium">End Time</span>
+<input class="input-base mt-1" type="time" value="17:00"/>
+</label>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<label>
+<span class="text-sm font-medium">Break Start</span>
+<input class="input-base mt-1" type="time" value="12:30"/>
+</label>
+<label>
+<span class="text-sm font-medium">Break End</span>
+<input class="input-base mt-1" type="time" value="13:30"/>
+</label>
+</div>
+</div>
+</div>
+</section>
+<hr class="border-border-light dark:border-border-dark"/>
+<section>
+<h3 class="text-xl font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">forum</span>
+                            Preferred Communication
+                        </h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Choose your primary method for receiving non-urgent communications.</p>
+<div class="mt-6 flex flex-wrap gap-3 p-1 bg-background-light dark:bg-background-dark rounded-lg">
+<label class="flex-1 has-[:checked]:bg-primary has-[:checked]:text-white has-[:checked]:shadow-md text-center cursor-pointer transition-all duration-200 rounded-DEFAULT py-2 px-4 font-semibold">
+<input checked="" class="sr-only" name="communication" type="radio" value="email"/>
+                                Email
+                            </label>
+<label class="flex-1 has-[:checked]:bg-primary has-[:checked]:text-white has-[:checked]:shadow-md text-center cursor-pointer transition-all duration-200 rounded-DEFAULT py-2 px-4 font-semibold">
+<input class="sr-only" name="communication" type="radio" value="sms"/>
+                                SMS
+                            </label>
+<label class="flex-1 has-[:checked]:bg-primary has-[:checked]:text-white has-[:checked]:shadow-md text-center cursor-pointer transition-all duration-200 rounded-DEFAULT py-2 px-4 font-semibold">
+<input class="sr-only" name="communication" type="radio" value="internal"/>
+                                Internal Messaging
+                            </label>
+</div>
+</section>
+<hr class="border-border-light dark:border-border-dark"/>
+<section>
+<h3 class="text-xl font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">notifications_active</span>
+                            Notification Settings
+                        </h3>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark mt-1">Select which alerts you'd like to receive.</p>
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+<label class="checkbox-label">
+<input checked="" class="sr-only" type="checkbox"/>
+<span class="checkbox-custom-bg flex-shrink-0 w-6 h-6 rounded-md border-2 border-border-light dark:border-border-dark flex items-center justify-center transition-colors">
+<svg class="checkbox-tick w-4 h-4 text-white opacity-0 transition-opacity" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"></path></svg>
+</span>
+<span class="font-medium">New Appointment</span>
+</label>
+<label class="checkbox-label">
+<input checked="" class="sr-only" type="checkbox"/>
+<span class="checkbox-custom-bg flex-shrink-0 w-6 h-6 rounded-md border-2 border-border-light dark:border-border-dark flex items-center justify-center transition-colors">
+<svg class="checkbox-tick w-4 h-4 text-white opacity-0 transition-opacity" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"></path></svg>
+</span>
+<span class="font-medium">Rescheduled Appointment</span>
+</label>
+<label class="checkbox-label">
+<input class="sr-only" type="checkbox"/>
+<span class="checkbox-custom-bg flex-shrink-0 w-6 h-6 rounded-md border-2 border-border-light dark:border-border-dark flex items-center justify-center transition-colors">
+<svg class="checkbox-tick w-4 h-4 text-white opacity-0 transition-opacity" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"></path></svg>
+</span>
+<span class="font-medium">Patient Message</span>
+</label>
+<label class="checkbox-label">
+<input checked="" class="sr-only" type="checkbox"/>
+<span class="checkbox-custom-bg flex-shrink-0 w-6 h-6 rounded-md border-2 border-border-light dark:border-border-dark flex items-center justify-center transition-colors">
+<svg class="checkbox-tick w-4 h-4 text-white opacity-0 transition-opacity" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z"></path></svg>
+</span>
+<span class="font-medium">System Announcements</span>
+</label>
+</div>
+</section>
+</div>
+<div class="flex justify-between items-center pt-6">
+<button class="px-6 py-3 rounded-DEFAULT font-semibold text-text-light dark:text-text-dark bg-background-light dark:bg-surface-dark border border-border-light dark:border-border-dark hover:bg-border-light dark:hover:bg-border-dark/50 transition-colors duration-200" type="button">
+                        Back
+                    </button>
+<button class="px-8 py-3 rounded-DEFAULT font-semibold text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark focus:ring-primary transition-colors duration-200" type="submit">
+                        Save &amp; Continue
+                    </button>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

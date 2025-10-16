@@ -1,0 +1,253 @@
+{
+  "name": "API - Analytics Metrics (Local)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "metrics",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "WebhookMetrics",
+      "name": "Webhook (GET /metrics)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.0,
+      "position": [
+        240,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "with last30 as (\n  select * from appointments\n  where start_time >= now() - interval '30 days'\n)\nselect\n  count(*)::int as total,\n  count(*) filter (where status='confirmed')::int as confirmed,\n  count(*) filter (where status='cancelled')::int as cancelled,\n  count(*) filter (where status='no_show')::int as no_show\nfrom last30;\n"
+      },
+      "id": "QTotals",
+      "name": "Postgres - Totals 30d",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1.0,
+      "position": [
+        540,
+        160
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "LOCAL_PG",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select\n  channel,\n  count(*)::int as sent\nfrom notifications\nwhere sent_at >= now() - interval '30 days'\ngroup by 1\norder by sent desc;\n"
+      },
+      "id": "QReminders",
+      "name": "Postgres - Reminders 30d",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1.0,
+      "position": [
+        540,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "LOCAL_PG",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "with days as (\n  select generate_series::date as d\n  from generate_series((current_date - interval '29 days')::date, current_date::date, interval '1 day')\n),\nagg as (\n  select date_trunc('day', start_time)::date as d, status, count(*)::int as c\n  from appointments\n  where start_time >= current_date - interval '29 days'\n  group by 1,2\n)\nselect\n  d as day,\n  coalesce(sum(c) filter (where status='booked'),0)::int as booked,\n  coalesce(sum(c) filter (where status='confirmed'),0)::int as confirmed,\n  coalesce(sum(c) filter (where status='cancelled'),0)::int as cancelled,\n  coalesce(sum(c) filter (where status='no_show'),0)::int as no_show\nfrom days\nleft join agg using (d)\ngroup by 1\norder by 1;\n"
+      },
+      "id": "QTimeseries",
+      "name": "Postgres - Timeseries 30d",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1.0,
+      "position": [
+        540,
+        440
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "LOCAL_PG",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select\n  round(avg(extract(epoch from (a.start_time - a.created_at)))/3600.0, 2) as avg_hours_to_appt\nfrom appointments a\nwhere a.created_at >= now() - interval '30 days';\n"
+      },
+      "id": "QLeadTime",
+      "name": "Postgres - Lead Time Hrs",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1.0,
+      "position": [
+        540,
+        580
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "LOCAL_PG",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "with today as (\n  select * from appointments\n  where start_time::date = current_date\n)\nselect\n  count(*)::int as total_today,\n  count(*) filter (where status='booked')::int as booked,\n  count(*) filter (where status='confirmed')::int as confirmed,\n  count(*) filter (where status='cancelled')::int as cancelled,\n  count(*) filter (where status='no_show')::int as no_show\nfrom today;\n"
+      },
+      "id": "QToday",
+      "name": "Postgres - Today Snapshot",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1.0,
+      "position": [
+        540,
+        720
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "LOCAL_PG",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Assemble a single JSON from prior node outputs\nconst totals = $items('Postgres - Totals 30d')[0].json;\nconst reminders = $items('Postgres - Reminders 30d').map(i => i.json);\nconst series = $items('Postgres - Timeseries 30d').map(i => i.json);\nconst lead = $items('Postgres - Lead Time Hrs')[0].json;\nconst today = $items('Postgres - Today Snapshot')[0].json;\n\nconst confirmedRate = totals.total ? Math.round((totals.confirmed / totals.total) * 100) : 0;\nconst noShowRate = totals.total ? Math.round((totals.no_show / totals.total) * 100) : 0;\n\nreturn [{\n  json: {\n    totals30d: totals,\n    kpis: {\n      confirmedRatePct: confirmedRate,\n      noShowRatePct: noShowRate,\n      avgHoursToAppt: lead.avg_hours_to_appt ?? null\n    },\n    reminders30d: reminders,\n    timeseries30d: series,\n    today: today,\n    generatedAt: new Date().toISOString()\n  }\n}];\n"
+      },
+      "id": "Assemble",
+      "name": "Function - Assemble JSON",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1.0,
+      "position": [
+        880,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "Content-Type": "application/json"
+          }
+        }
+      },
+      "id": "Respond",
+      "name": "Respond (JSON)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.0,
+      "position": [
+        1120,
+        420
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook (GET /metrics)": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Totals 30d",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres - Reminders 30d",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres - Timeseries 30d",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres - Lead Time Hrs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres - Today Snapshot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Totals 30d": {
+      "main": [
+        [
+          {
+            "node": "Function - Assemble JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Reminders 30d": {
+      "main": [
+        [
+          {
+            "node": "Function - Assemble JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Timeseries 30d": {
+      "main": [
+        [
+          {
+            "node": "Function - Assemble JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Lead Time Hrs": {
+      "main": [
+        [
+          {
+            "node": "Function - Assemble JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Today Snapshot": {
+      "main": [
+        [
+          {
+            "node": "Function - Assemble JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function - Assemble JSON": {
+      "main": [
+        [
+          {
+            "node": "Respond (JSON)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false
+}

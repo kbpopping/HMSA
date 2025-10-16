@@ -1,0 +1,84 @@
+{
+  "name": "API - List Clinicians",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "clinicians",
+        "responseMode": "lastNode"
+      },
+      "id": "Webhook",
+      "name": "Webhook (GET /clinicians)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.0,
+      "position": [
+        220,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "select id, name from clinicians order by name;"
+      },
+      "id": "Query",
+      "name": "Postgres - Clinicians",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1.0,
+      "position": [
+        520,
+        200
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "LOCAL_PG",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "Content-Type": "application/json"
+          }
+        }
+      },
+      "id": "Respond",
+      "name": "Respond (JSON)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.0,
+      "position": [
+        760,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook (GET /clinicians)": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Clinicians",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Clinicians": {
+      "main": [
+        [
+          {
+            "node": "Respond (JSON)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#14628f",
+              "background-light": "#f6f7f8",
+              "background-dark": "#111b21",
+            },
+            fontFamily: {
+              display: ["Inter"],
+            },
+            borderRadius: { DEFAULT: "0.5rem", lg: "1rem", xl: "1.5rem", full: "9999px" },
+          },
+        },
+      };
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex h-full min-h-screen w-full flex-col">
+<header class="flex shrink-0 items-center justify-between border-b border-black/10 bg-white dark:border-white/10 dark:bg-background-dark px-10 py-3">
+<div class="flex items-center gap-4 text-black dark:text-white">
+<svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"></path>
+</svg>
+<h2 class="text-lg font-bold">HMSA</h2>
+</div>
+<nav class="hidden items-center gap-8 md:flex">
+<a class="text-sm font-medium text-black/60 transition-colors hover:text-black dark:text-white/60 dark:hover:text-white" href="#">Dashboard</a>
+<a class="text-sm font-medium text-black/60 transition-colors hover:text-black dark:text-white/60 dark:hover:text-white" href="#">Schedule</a>
+<a class="text-sm font-bold text-primary" href="#">Patients</a>
+<a class="text-sm font-medium text-black/60 transition-colors hover:text-black dark:text-white/60 dark:hover:text-white" href="#">Messages</a>
+<a class="text-sm font-medium text-black/60 transition-colors hover:text-black dark:text-white/60 dark:hover:text-white" href="#">Reports</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-background-light text-black/60 transition-colors hover:bg-black/5 hover:text-black dark:bg-white/10 dark:text-white/60 dark:hover:bg-white/20 dark:hover:text-white">
+<span class="material-symbols-outlined text-xl"> notifications </span>
+</button>
+<div class="h-10 w-10 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBXYSEbx9UrzZpaAKQe8UdXz81szjCM25Cha5G6ccYhcKYf79S9c6HAPZyT49KHjNu9PcOtDoJlcPCz__m7F1aGtAU6swSpNfs_kWVfcvheCdcLgQQHYNxrQ_NMxpbJy2vc47VF4iKPoOPuyY7XO5jYsYvtEBdt3WBIaKtRPRm4KR98Es68p8W8HSWausL40_NRV7nv9eTjKhsX7XNc8v8cWapAfCvZ-yiV-Y8EIu9NkyEieveocmGluSG1HfFdrrYdxeYDLiWWTwY");'></div>
+</div>
+</header>
+<main class="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+<div class="mx-auto max-w-6xl">
+<div class="mb-8">
+<h1 class="text-3xl font-bold text-black dark:text-white">My Patients</h1>
+<p class="mt-1 text-black/60 dark:text-white/60">List of patients assigned to or recently seen by you.</p>
+</div>
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+<div class="relative flex-1">
+<span class="material-symbols-outlined pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-black/50 dark:text-white/50"> search </span>
+<input class="w-full rounded-lg border border-black/10 bg-white py-2 pl-10 pr-4 text-black focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/50 dark:border-white/10 dark:bg-background-dark dark:text-white" placeholder="Search by name or MRN" type="search"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 rounded bg-white px-4 py-2 text-sm font-medium text-black/80 shadow-sm ring-1 ring-black/10 transition-colors hover:bg-black/5 dark:bg-background-dark dark:text-white/80 dark:ring-white/10 dark:hover:bg-white/10">
+<span>Appointment Status</span>
+<span class="material-symbols-outlined text-lg"> expand_more </span>
+</button>
+<button class="flex items-center gap-2 rounded bg-white px-4 py-2 text-sm font-medium text-black/80 shadow-sm ring-1 ring-black/10 transition-colors hover:bg-black/5 dark:bg-background-dark dark:text-white/80 dark:ring-white/10 dark:hover:bg-white/10">
+<span>Date Range</span>
+<span class="material-symbols-outlined text-lg"> expand_more </span>
+</button>
+</div>
+</div>
+<div class="overflow-hidden rounded-lg border border-black/10 bg-white shadow-sm dark:border-white/10 dark:bg-background-dark">
+<div class="overflow-x-auto">
+<table class="w-full min-w-[800px] table-auto">
+<thead class="border-b border-black/10 bg-background-light/50 text-left text-sm font-semibold text-black/60 dark:border-white/10 dark:bg-white/5 dark:text-white/60">
+<tr>
+<th class="px-6 py-4">Patient Name</th>
+<th class="px-6 py-4">MRN</th>
+<th class="px-6 py-4">Last Appointment</th>
+<th class="px-6 py-4">Next Appointment</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-black/10 text-sm text-black dark:divide-white/10 dark:text-white">
+<tr>
+<td class="px-6 py-4 font-medium">Sophia Clark</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">1234567</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">2023-11-15</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">2023-12-15</td>
+<td class="px-6 py-4 text-right">
+<a class="font-semibold text-primary transition-colors hover:text-primary/80" href="#">View Profile</a>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">Ethan Bennett</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">7654321</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">2023-11-10</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">2023-12-10</td>
+<td class="px-6 py-4 text-right">
+<a class="font-semibold text-primary transition-colors hover:text-primary/80" href="#">View Profile</a>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">Olivia Carter</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">2468135</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">2023-11-05</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">2023-12-05</td>
+<td class="px-6 py-4 text-right">
+<a class="font-semibold text-primary transition-colors hover:text-primary/80" href="#">View Profile</a>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">Liam Davis</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">1357924</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">2023-10-30</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">2023-11-30</td>
+<td class="px-6 py-4 text-right">
+<a class="font-semibold text-primary transition-colors hover:text-primary/80" href="#">View Profile</a>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-medium">Ava Evans</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">9876543</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">2023-10-25</td>
+<td class="px-6 py-4 text-black/60 dark:text-white/60">2023-11-25</td>
+<td class="px-6 py-4 text-right">
+<a class="font-semibold text-primary transition-colors hover:text-primary/80" href="#">View Profile</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

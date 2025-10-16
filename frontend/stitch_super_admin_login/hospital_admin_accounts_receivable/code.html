@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#14628f",
+            "background-light": "#f6f7f8",
+            "background-dark": "#111b21",
+            "foreground-light": "#0e161b",
+            "foreground-dark": "#ffffff",
+            "subtle-light": "#507c95",
+            "subtle-dark": "#a0b8c6",
+            "surface-light": "#ffffff",
+            "surface-dark": "#1a2831",
+            "border-light": "#d1dee6",
+            "border-dark": "#2c3f4c"
+          },
+          fontFamily: {
+            "display": ["Saira", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.75rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          boxShadow: {
+            "soft": "0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05)",
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .status-pending { background-color: #fef9c3; color: #854d0e; }
+    .dark .status-pending { background-color: #423d1d; color: #fef9c3; }
+    .status-paid { background-color: #dcfce7; color: #166534; }
+    .dark .status-paid { background-color: #143621; color: #dcfce7; }
+    .status-overdue { background-color: #fee2e2; color: #991b1b; }
+    .dark .status-overdue { background-color: #451a1a; color: #fee2e2; }
+    .status-collection { background-color: #e5e7eb; color: #374151; }
+    .dark .status-collection { background-color: #374151; color: #e5e7eb; }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex h-screen flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-border-light dark:border-border-dark px-10 py-4 shadow-soft">
+<div class="flex items-center gap-4">
+<svg class="text-primary size-8" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path><path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path></svg>
+<h2 class="text-foreground-light dark:text-foreground-dark text-xl font-bold">MediCorp HMSA</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-subtle-light dark:text-subtle-dark hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Dashboard</a>
+<a class="text-subtle-light dark:text-subtle-dark hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Scheduling</a>
+<a class="text-subtle-light dark:text-subtle-dark hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Patient Records</a>
+<a class="text-foreground-light dark:text-foreground-dark text-sm font-bold" href="#">Billing &amp; Financials</a>
+<a class="text-subtle-light dark:text-subtle-dark hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Reporting</a>
+<a class="text-subtle-light dark:text-subtle-dark hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Admin Tools</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-full size-10 bg-background-light dark:bg-surface-dark hover:bg-primary/10 dark:hover:bg-primary/20 text-subtle-light dark:text-subtle-dark hover:text-primary dark:hover:text-white transition-colors">
+<svg class="size-5" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path></svg>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDphS2C8KCUP_6CY3MVmCveJWQvTSI3bJbfmmA-Hz1AAUde6WRcmfsvVafVYgo9LI1VuorjfuUjvg_V-XjACrDDCDJ4cMTQY1pkv47_dGApBz5b5-WbG_3e5r-JjA6unHKJBUKqCgCzMAe5OvZSEXYCEcfsLf2FnhoL9AZq1ZB1qOshHDB2F2yw3zhoBrXPLtpRujgNjEKTYU1cDDSIflk84UDN2CIEFvtA6Q5BDbbgCWC6bYfg26R4RwehzOdN2KV_umnaJV4IxlE");'></div>
+</div>
+</header>
+<main class="flex-1 overflow-y-auto">
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+<div class="mb-8">
+<h1 class="text-3xl font-bold text-foreground-light dark:text-foreground-dark">Billing &amp; Financials</h1>
+<p class="mt-1 text-subtle-light dark:text-subtle-dark">Manage all financial transactions, generate reports, and track payments.</p>
+</div>
+<div class="border-b border-border-light dark:border-border-dark mb-6">
+<nav aria-label="Tabs" class="-mb-px flex space-x-8">
+<a class="border-transparent text-subtle-light dark:text-subtle-dark hover:text-primary hover:border-primary whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" href="#">Overview</a>
+<a aria-current="page" class="border-primary text-primary whitespace-nowrap py-4 px-1 border-b-2 font-bold text-sm" href="#">Accounts Receivable</a>
+<a class="border-transparent text-subtle-light dark:text-subtle-dark hover:text-primary hover:border-primary whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm" href="#">Accounts Payable</a>
+</nav>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-lg shadow-soft p-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+<div class="relative md:col-span-1">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<svg class="size-5 text-subtle-light dark:text-subtle-dark" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg>
+</div>
+<input class="block w-full rounded-lg border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark pl-10 pr-3 py-2.5 text-sm text-foreground-light dark:text-foreground-dark placeholder:text-subtle-light dark:placeholder:text-subtle-dark focus:ring-primary focus:border-primary" id="search" name="search" placeholder="Search by patient, invoice..." type="text"/>
+</div>
+<div class="flex items-center gap-4 md:col-span-2 justify-end">
+<button class="flex h-10 items-center justify-center gap-x-2 rounded-lg bg-background-light dark:bg-surface-dark border border-border-light dark:border-border-dark px-4 text-sm font-medium text-foreground-light dark:text-foreground-dark hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors">
+<span>Status</span>
+<svg class="size-4 text-subtle-light dark:text-subtle-dark" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg>
+</button>
+<button class="flex h-10 items-center justify-center gap-x-2 rounded-lg bg-background-light dark:bg-surface-dark border border-border-light dark:border-border-dark px-4 text-sm font-medium text-foreground-light dark:text-foreground-dark hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors">
+<span>Date Range</span>
+<svg class="size-4 text-subtle-light dark:text-subtle-dark" fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="min-w-full divide-y divide-border-light dark:divide-border-dark">
+<thead class="bg-background-light dark:bg-surface-dark">
+<tr>
+<th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-foreground-light dark:text-foreground-dark sm:pl-6" scope="col">Patient/Payer</th>
+<th class="px-3 py-3.5 text-left text-sm font-semibold text-foreground-light dark:text-foreground-dark" scope="col">Invoice #</th>
+<th class="px-3 py-3.5 text-left text-sm font-semibold text-foreground-light dark:text-foreground-dark" scope="col">Service Rendered</th>
+<th class="px-3 py-3.5 text-left text-sm font-semibold text-foreground-light dark:text-foreground-dark" scope="col">Amount Due</th>
+<th class="px-3 py-3.5 text-left text-sm font-semibold text-foreground-light dark:text-foreground-dark" scope="col">Due Date</th>
+<th class="px-3 py-3.5 text-center text-sm font-semibold text-foreground-light dark:text-foreground-dark" scope="col">Status</th>
+<th class="relative py-3.5 pl-3 pr-4 sm:pr-6" scope="col"><span class="sr-only">Actions</span></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-light dark:divide-border-dark bg-surface-light dark:bg-surface-dark">
+<tr>
+<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-foreground-light dark:text-foreground-dark sm:pl-6">Liam Harper</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">INV-2024-001</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">Consultation</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">$150.00</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">2024-03-15</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-pending">Pending</span>
+</td>
+<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+<a class="text-primary hover:text-primary/80" href="#">Record Payment</a>
+</td>
+</tr>
+<tr>
+<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-foreground-light dark:text-foreground-dark sm:pl-6">Olivia Bennett</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">INV-2024-002</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">Lab Tests</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">$250.00</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">2024-03-20</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-paid">Paid</span>
+</td>
+<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+<a class="text-primary hover:text-primary/80" href="#">View Details</a>
+</td>
+</tr>
+<tr>
+<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-foreground-light dark:text-foreground-dark sm:pl-6">Noah Carter</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">INV-2024-003</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">Physical Therapy</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">$300.00</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">2024-03-25</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-overdue">Overdue</span>
+</td>
+<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+<a class="text-primary hover:text-primary/80" href="#">Send Reminder</a>
+</td>
+</tr>
+<tr>
+<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-foreground-light dark:text-foreground-dark sm:pl-6">Ava Morgan</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">INV-2024-004</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">Surgery</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">$1,500.00</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">2024-03-30</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-collection">Collection</span>
+</td>
+<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+<a class="text-primary hover:text-primary/80" href="#">View Details</a>
+</td>
+</tr>
+<tr>
+<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-foreground-light dark:text-foreground-dark sm:pl-6">Ethan Hayes</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">INV-2024-005</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">Follow-up</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">$100.00</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-subtle-light dark:text-subtle-dark">2024-04-05</td>
+<td class="whitespace-nowrap px-3 py-4 text-sm text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium status-pending">Pending</span>
+</td>
+<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+<a class="text-primary hover:text-primary/80" href="#">Record Payment</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

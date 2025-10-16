@@ -1,0 +1,296 @@
+{
+  "name": "API - Analytics Metrics (Local, v2 with filters + token)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "metrics",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "WebhookMetrics",
+      "name": "Webhook (GET /metrics)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.0,
+      "position": [
+        160,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"headers\"][\"x-dash-token\"]}}",
+              "operation": "equal",
+              "value2": "={{$env.DASH_TOKEN}}"
+            }
+          ]
+        }
+      },
+      "id": "IfAuth",
+      "name": "IF Auth (X-DASH-TOKEN)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1.0,
+      "position": [
+        380,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "responseBody": "Unauthorized",
+        "options": {
+          "responseCode": 401
+        }
+      },
+      "id": "Respond401",
+      "name": "Respond 401",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.0,
+      "position": [
+        600,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Normalize query params and build SQL fragments\nconst q = $json.query || {};\nconst pad = n => String(n).padStart(2,'0');\nconst today = new Date();\nconst toDate = (s) => {\n  try { const d = new Date(s); if (isNaN(d)) return null; return d; } catch { return null; }\n};\nconst endD = toDate(q.end) || today;\nconst startD = toDate(q.start) || new Date(endD.getTime() - 29*24*3600*1000);\nconst fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;\n\nconst clinicianId = q.clinician_id ? Number(q.clinician_id) : null;\nconst clinicId = q.clinic_id ? Number(q.clinic_id) : null;\n\nlet whereAppt = ``;\nlet joinClin = ``;\nif (clinicianId) whereAppt += ` AND a.clinician_id = ${clinicianId}`;\nif (clinicId) { joinClin = ` JOIN clinicians c ON c.id = a.clinician_id `; whereAppt += ` AND c.clinic_id = ${clinicId}`; }\n\n// For notifications, we may not know appointment link; keep date filter only, but also show provider breakdown\nconst start_date = fmt(startD);\nconst end_date = fmt(endD);\n\nreturn [{\n  json: { start_date, end_date, whereAppt, joinClin }\n}];\n"
+      },
+      "id": "FnNormalize",
+      "name": "Function - Normalize Params",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1.0,
+      "position": [
+        600,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "with bounds as (\n  select '{{ $json.start_date }}'::date as sd, '{{ $json.end_date }}'::date as ed\n),\nlastN as (\n  select a.* from appointments a {{ $json.joinClin }}\n  where a.start_time >= (select sd from bounds)\n    and a.start_time <  (select ed + interval '1 day' from bounds)\n    {{ $json.whereAppt }}\n)\nselect\n  count(*)::int as total,\n  count(*) filter (where status='confirmed')::int as confirmed,\n  count(*) filter (where status='cancelled')::int as cancelled,\n  count(*) filter (where status='no_show')::int as no_show\nfrom lastN;\n"
+      },
+      "id": "QTotals",
+      "name": "Postgres - Totals (range)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1.0,
+      "position": [
+        880,
+        120
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "LOCAL_PG",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "with bounds as (\n  select '{{ $json.start_date }}'::date as sd, '{{ $json.end_date }}'::date as ed\n)\nselect\n  channel,\n  coalesce(provider, 'unknown') as provider,\n  count(*) filter (where status='sent')::int as sent,\n  count(*) filter (where status='failed')::int as failed\nfrom notifications\nwhere sent_at >= (select sd from bounds)\n  and sent_at <  (select ed + interval '1 day' from bounds)\ngroup by 1,2\norder by 1,2;\n"
+      },
+      "id": "QProviders",
+      "name": "Postgres - Provider Breakdown",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1.0,
+      "position": [
+        880,
+        260
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "LOCAL_PG",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "with bounds as (\n  select '{{ $json.start_date }}'::date as sd, '{{ $json.end_date }}'::date as ed\n),\ndays as (\n  select generate_series::date as d\n  from generate_series((select sd from bounds), (select ed from bounds), interval '1 day')\n),\nagg as (\n  select date_trunc('day', a.start_time)::date as d, a.status, count(*)::int as c\n  from appointments a {{ $json.joinClin }}\n  where a.start_time >= (select sd from bounds)\n    and a.start_time <  (select ed + interval '1 day' from bounds)\n    {{ $json.whereAppt }}\n  group by 1,2\n)\nselect\n  d as day,\n  coalesce(sum(c) filter (where status='booked'),0)::int as booked,\n  coalesce(sum(c) filter (where status='confirmed'),0)::int as confirmed,\n  coalesce(sum(c) filter (where status='cancelled'),0)::int as cancelled,\n  coalesce(sum(c) filter (where status='no_show'),0)::int as no_show\nfrom days\nleft join agg using (d)\ngroup by 1\norder by 1;\n"
+      },
+      "id": "QTimeseries",
+      "name": "Postgres - Timeseries (range)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1.0,
+      "position": [
+        880,
+        400
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "LOCAL_PG",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "with bounds as (\n  select '{{ $json.start_date }}'::date as sd, '{{ $json.end_date }}'::date as ed\n)\nselect\n  round(avg(extract(epoch from (a.start_time - a.created_at)))/3600.0, 2) as avg_hours_to_appt\nfrom appointments a {{ $json.joinClin }}\nwhere a.created_at >= (select sd from bounds)\n  and a.created_at <  (select ed + interval '1 day' from bounds)\n  {{ $json.whereAppt }};\n"
+      },
+      "id": "QLeadTime",
+      "name": "Postgres - Lead Time (range)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1.0,
+      "position": [
+        880,
+        540
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "LOCAL_PG",
+          "name": "Local Postgres"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const totals = $items('Postgres - Totals (range)')[0].json;\nconst providers = $items('Postgres - Provider Breakdown').map(i => i.json);\nconst series = $items('Postgres - Timeseries (range)').map(i => i.json);\nconst lead = $items('Postgres - Lead Time (range)')[0].json;\n\nconst confirmedRate = totals.total ? Math.round((totals.confirmed / totals.total) * 100) : 0;\nconst noShowRate = totals.total ? Math.round((totals.no_show / totals.total) * 100) : 0;\n\nreturn [{\n  json: {\n    range: { start: $json.start_date, end: $json.end_date },\n    totals: totals,\n    kpis: {\n      confirmedRatePct: confirmedRate,\n      noShowRatePct: noShowRate,\n      avgHoursToAppt: lead.avg_hours_to_appt ?? null\n    },\n    providerBreakdown: providers,\n    timeseries: series,\n    generatedAt: new Date().toISOString()\n  }\n}];\n"
+      },
+      "id": "FnAssemble",
+      "name": "Function - Assemble JSON",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1.0,
+      "position": [
+        1160,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "responseBody": "={{$json}}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "Content-Type": "application/json"
+          }
+        }
+      },
+      "id": "Respond200",
+      "name": "Respond (JSON)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.0,
+      "position": [
+        1380,
+        360
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook (GET /metrics)": {
+      "main": [
+        [
+          {
+            "node": "IF Auth (X-DASH-TOKEN)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Auth (X-DASH-TOKEN)": {
+      "main": [
+        [
+          {
+            "node": "Function - Normalize Params",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 401",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function - Normalize Params": {
+      "main": [
+        [
+          {
+            "node": "Postgres - Totals (range)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres - Provider Breakdown",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres - Timeseries (range)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Postgres - Lead Time (range)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Totals (range)": {
+      "main": [
+        [
+          {
+            "node": "Function - Assemble JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Provider Breakdown": {
+      "main": [
+        [
+          {
+            "node": "Function - Assemble JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Timeseries (range)": {
+      "main": [
+        [
+          {
+            "node": "Function - Assemble JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres - Lead Time (range)": {
+      "main": [
+        [
+          {
+            "node": "Function - Assemble JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function - Assemble JSON": {
+      "main": [
+        [
+          {
+            "node": "Respond (JSON)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false
+}

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Super Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+        .font-inconsolata {
+            font-family: 'Inconsolata', monospace;
+        }
+    </style>
+<script>tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#607AFB", "background-light": "#f5f6f8", "background-dark": "#0f1323", "text-light": "#111827", "text-dark": "#f3f4f6", "subtle-light": "#e5e7eb", "subtle-dark": "#374151", "card-light": "#ffffff", "card-dark": "#1f2937", success: "#10b981", warning: "#f59e0b", danger: "#ef4444"}, fontFamily: {display: "Space Grotesk"}, borderRadius: {DEFAULT: "0.5rem", lg: "1rem", xl: "1.5rem", full: "9999px"}, boxShadow: {soft: "0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05)"}}}};</script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark antialiased">
+<div class="flex h-screen">
+<aside class="w-64 bg-card-light dark:bg-card-dark p-6 shadow-soft flex flex-col">
+<div class="flex items-center gap-3 mb-10">
+<div class="bg-primary p-2 rounded-lg">
+<span class="material-symbols-outlined text-white">shield_person</span>
+</div>
+<h1 class="text-xl font-bold text-primary">Super Admin</h1>
+</div>
+<nav class="flex-grow">
+<ul class="space-y-2">
+<li><a class="flex items-center gap-3 px-4 py-2 rounded-lg bg-primary/10 text-primary font-bold" href="#"><span class="material-symbols-outlined">dashboard</span>Dashboard</a></li>
+<li><a class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors" href="#"><span class="material-symbols-outlined">apartment</span>Hospitals</a></li>
+<li><a class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors" href="#"><span class="material-symbols-outlined">group</span>Users</a></li>
+<li><a class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors" href="#"><span class="material-symbols-outlined">settings</span>Settings</a></li>
+</ul>
+</nav>
+<div>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors" href="#"><span class="material-symbols-outlined">logout</span>Logout</a>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto p-8">
+<div class="max-w-7xl mx-auto">
+<header class="mb-8">
+<h2 class="text-3xl font-bold">Dashboard</h2>
+<p class="text-text-light/70 dark:text-text-dark/70">Welcome back, Super Admin!</p>
+</header>
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-soft">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">Total Hospitals</p>
+<p class="text-3xl font-bold">128</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl">apartment</span>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-soft">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">Active Hospitals (24h)</p>
+<p class="text-3xl font-bold">112</p>
+</div>
+<span class="material-symbols-outlined text-success text-3xl">local_activity</span>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-soft">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">Total Users</p>
+<p class="text-3xl font-bold">1,452</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl">group</span>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-soft">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">Outbound Queue</p>
+<p class="text-3xl font-bold">42</p>
+</div>
+<span class="material-symbols-outlined text-warning text-3xl">outgoing_mail</span>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 space-y-8">
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-soft">
+<h3 class="text-lg font-bold mb-4">Reminders Sent</h3>
+<div class="h-80 bg-subtle-light/50 dark:bg-subtle-dark/50 rounded-lg flex items-center justify-center">
+<p class="text-text-light/50 dark:text-text-dark/50">Chart for Last 7/30 days goes here</p>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-soft">
+<h3 class="text-lg font-bold mb-4">n8n Workflow Health</h3>
+<div class="flex items-center gap-2 text-sm text-text-light/70 dark:text-text-dark/70 mb-4">
+<span class="material-symbols-outlined text-success">check_circle</span>
+<span>All systems operational</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-background-light dark:bg-background-dark p-4 rounded-lg">
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">Last Run</p>
+<p class="font-bold">2 min ago</p>
+</div>
+<div class="bg-background-light dark:bg-background-dark p-4 rounded-lg">
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">Failures (24h)</p>
+<p class="font-bold text-success">0</p>
+</div>
+<div class="bg-background-light dark:bg-background-dark p-4 rounded-lg">
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">Avg. Latency</p>
+<p class="font-bold">120ms</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-soft">
+<h3 class="text-lg font-bold mb-4">Recent Activity</h3>
+<ul class="space-y-4">
+<li class="flex items-start gap-4">
+<div class="bg-success/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-success">add_business</span>
+</div>
+<div>
+<p class="font-medium">New hospital 'St. Jude's' created.</p>
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">2 hours ago</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<div class="bg-primary/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-primary">badge</span>
+</div>
+<div>
+<p class="font-medium">Impersonated 'Dr. Alan Grant' at 'City General'.</p>
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">Yesterday</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<div class="bg-danger/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-danger">error</span>
+</div>
+<div>
+<p class="font-medium">API Error: 502 Bad Gateway on patient-sync.</p>
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">Yesterday</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<div class="bg-success/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-success">add_business</span>
+</div>
+<div>
+<p class="font-medium">New hospital 'Mercy West' created.</p>
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">2 days ago</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<div class="bg-warning/10 p-2 rounded-full">
+<span class="material-symbols-outlined text-warning">notification_important</span>
+</div>
+<div>
+<p class="font-medium">High latency detected in outbound SMS queue.</p>
+<p class="text-sm text-text-light/70 dark:text-text-dark/70">3 days ago</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>HMSA Admin Login</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 520px; margin: 32px auto; }
+    label { display:block; margin-top: 12px; }
+    input, button { padding: 8px; font-size: 14px; }
+    .msg { margin-top: 16px; white-space: pre-wrap; font-family: ui-monospace, monospace; }
+  </style>
+</head>
+<body>
+  <h1>HMSA Admin Login</h1>
+  <label>Email <input id="email" value="superadmin@demo.com"></label>
+  <label>Password <input id="password" type="password" value="Admin!234"></label>
+  <button id="loginBtn">Login</button>
+  <button id="hospBtn">List Hospitals</button>
+  <pre class="msg" id="out"></pre>
+
+  <script>
+  const out = document.getElementById('out');
+  const base = 'http://localhost:8082';
+
+  function log(o){ out.textContent = (typeof o==='string')? o : JSON.stringify(o, null, 2); }
+
+  document.getElementById('loginBtn').onclick = async () => {
+    out.textContent='';
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    try {
+      const res = await fetch(base + '/api/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        credentials: 'include',           // IMPORTANT for cookies
+        body: JSON.stringify({ email, password })
+      });
+      const json = await res.json();
+      log(json);
+    } catch (e) { log(e.message); }
+  };
+
+  document.getElementById('hospBtn').onclick = async () => {
+    out.textContent='';
+    try {
+      const res = await fetch(base + '/api/super/hospitals', {
+        credentials: 'include'            // send cookies
+      });
+      const json = await res.json();
+      log(json);
+    } catch (e) { log(e.message); }
+  };
+  </script>
+</body>
+</html>
