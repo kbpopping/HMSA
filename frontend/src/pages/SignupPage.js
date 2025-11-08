@@ -1,0 +1,26 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+const SignupPage = () => {
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        confirmPassword: '',
+    });
+    const [isLoading, setIsLoading] = useState(false);
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setTimeout(() => {
+            setIsLoading(false);
+            navigate('/login');
+        }, 1000);
+    };
+    return (_jsxs("div", { className: "relative min-h-screen w-full", children: [_jsxs("div", { className: "absolute inset-0 z-0", children: [_jsx("img", { alt: "Two smiling doctors", className: "h-full w-full object-cover", src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCNL1ZIyHw1sBCeTAp8ny32daCTNGBdpgdNutKLM3Gj_jmkiykE7LKdje0TK0OcBc8oSmt88Npws-DgdJP4g_7oiaT-rA4IezUjhJbE9wgh-87BhWld7LHK9C7BSqdv3xAeWN7jTqO3BJM-ARFf_dfBr2jKRGjb77jBAv4pUJyX6-b4aODFBWiERdVAnV0KGLm4wjnjvEkJQf1ceX_wiPZrUKxD3eL834FI-pn1AmVavGqcwMVGPDe2tSENrz6JpKKfOB7pudatOSs" }), _jsx("div", { className: "absolute inset-0 bg-black/50" })] }), _jsx("div", { className: "relative z-10 flex min-h-screen items-center justify-center p-4", children: _jsxs("div", { className: "w-full max-w-md space-y-6 rounded-xl bg-background-light/90 dark:bg-background-dark/90 p-8 shadow-soft backdrop-blur-sm", children: [_jsxs("div", { className: "text-center", children: [_jsxs("div", { className: "mb-6 flex justify-center items-center", children: [_jsx("div", { className: "bg-primary p-2 rounded-full inline-block", children: _jsx("svg", { className: "w-8 h-8 text-white", fill: "none", stroke: "currentColor", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", children: _jsx("path", { d: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z", strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: "2" }) }) }), _jsx("span", { className: "ml-4 text-2xl font-bold font-inconsolata text-text-light dark:text-text-dark", children: "HMSA" })] }), _jsx("h1", { className: "text-3xl font-bold text-text-light dark:text-text-dark", children: "Create Super Admin Account" }), _jsx("p", { className: "mt-2 text-sm text-text-light/70 dark:text-text-dark/70", children: "Join the hospital management system" })] }), _jsxs("form", { onSubmit: handleSubmit, className: "space-y-4", children: [_jsxs("div", { children: [_jsx("label", { className: "sr-only", htmlFor: "email", children: "Email" }), _jsx("input", { autoComplete: "email", className: "w-full rounded-lg border-subtle-light bg-background-light px-4 py-3 text-text-light placeholder-text-light/50 focus:border-primary focus:ring-primary dark:border-subtle-dark dark:bg-background-dark dark:text-text-dark dark:placeholder-text-dark/50 dark:focus:border-primary dark:focus:ring-primary", id: "email", name: "email", placeholder: "Email Address", value: formData.email, onChange: handleInputChange, required: true, type: "email" })] }), _jsxs("div", { children: [_jsx("label", { className: "sr-only", htmlFor: "password", children: "Password" }), _jsx("input", { autoComplete: "new-password", className: "w-full rounded-lg border-subtle-light bg-background-light px-4 py-3 text-text-light placeholder-text-light/50 focus:border-primary focus:ring-primary dark:border-subtle-dark dark:bg-background-dark dark:text-text-dark dark:placeholder-text-dark/50 dark:focus:border-primary dark:focus:ring-primary", id: "password", name: "password", placeholder: "Password", value: formData.password, onChange: handleInputChange, required: true, type: "password" })] }), _jsxs("div", { children: [_jsx("label", { className: "sr-only", htmlFor: "confirm-password", children: "Confirm Password" }), _jsx("input", { autoComplete: "new-password", className: "w-full rounded-lg border-subtle-light bg-background-light px-4 py-3 text-text-light placeholder-text-light/50 focus:border-primary focus:ring-primary dark:border-subtle-dark dark:bg-background-dark dark:text-text-dark dark:placeholder-text-dark/50 dark:focus:border-primary dark:focus:ring-primary", id: "confirm-password", name: "confirmPassword", placeholder: "Confirm Password", value: formData.confirmPassword, onChange: handleInputChange, required: true, type: "password" })] }), _jsx("div", { children: _jsx("button", { className: "w-full rounded-lg bg-primary px-4 py-3 text-base font-bold text-white shadow-soft transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark", type: "submit", disabled: isLoading, children: isLoading ? 'Creating Account...' : 'Sign Up' }) })] }), _jsxs("div", { className: "text-center text-sm text-text-light/70 dark:text-text-dark/70", children: [_jsxs("p", { className: "mb-2", children: ["Already have an account?", _jsx("button", { onClick: () => navigate('/login'), className: "ml-1 font-medium text-primary hover:underline", children: "Log In" })] }), _jsx("a", { className: "font-medium text-primary hover:underline", href: "#", children: "Privacy Policy" })] })] }) })] }));
+};
+export default SignupPage;

@@ -1,129 +1,157 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { z } from 'zod';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useAuth } from '../store/auth';
 import { toast } from 'sonner';
 
 const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email'),
-  password: z.string().min(1, 'Password is required'),
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type LoginFormData = z.infer<typeof loginSchema>;
 
-const LoginPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
+const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>({
+  const { login, status, user } = useAuth();
+  const [error, setError] = useState<string>('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
   });
 
-  const onSubmit = async (data: LoginFormValues) => {
-    setIsLoading(true);
-    
+  // Auth disabled in dev mode - redirect logic removed
+  // This useEffect would redirect if user is logged in, but we're bypassing auth
+
+  const onSubmit = async (data: LoginFormData) => {
+    setError('');
     try {
-      // Mock login - in a real app, this would call your API
-      console.log('Login attempt with:', data);
+      const loggedInUser = await login(data.email, data.password);
+      toast.success('Login successful!');
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, route to super admin dashboard
-      if (data.email.includes('super')) {
-        toast.success('Logged in as Super Admin');
-        navigate('/super/dashboard');
-      } else {
-        toast.success('Logged in as Hospital Admin');
-        navigate('/hospital/dashboard');
+      // Navigate based on role
+      if (loggedInUser.role === 'super_admin') {
+        navigate('/super/dashboard', { replace: true });
+      } else if (loggedInUser.role === 'hospital_admin') {
+        navigate('/hospital/dashboard', { replace: true });
       }
-    } catch (error) {
-      toast.error('Login failed. Please check your credentials.');
-    } finally {
-      setIsLoading(false);
+    } catch (err: any) {
+      const errorMessage = err?.message || 'Login failed. Please check your credentials.';
+      setError(errorMessage);
+      toast.error(errorMessage);
+    }
+  };
+
+  const onError = (validationErrors: any) => {
+    // Show first validation error
+    const firstError = Object.values(validationErrors)[0] as any;
+    if (firstError?.message) {
+      setError(firstError.message);
     }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1 className="text-2xl font-bold mb-6 text-center">Login to HMSA</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              {...register('email')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-              placeholder="you@example.com"
-              disabled={isLoading}
-            />
-            {errors.email && (
-              <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
-            )}
+    <div className="relative min-h-screen w-full">
+      {/* Background with doctors image and overlay */}
+      <div className="absolute inset-0 z-0">
+        <img
+          alt="Two smiling doctors"
+          className="h-full w-full object-cover"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNL1ZIyHw1sBCeTAp8ny32daCTNGBdpgdNutKLM3Gj_jmkiykE7LKdje0TK0OcBc8oSmt88Npws-DgdJP4g_7oiaT-rA4IezUjhJbE9wgh-87BhWld7LHK9C7BSqdv3xAeWN7jTqO3BJM-ARFf_dfBr2jKRGjb77jBAv4pUJyX6-b4aODFBWiERdVAnV0KGLm4wjnjvEkJQf1ceX_wiPZrUKxD3eL834FI-pn1AmVavGqcwMVGPDe2tSENrz6JpKKfOB7pudatOSs"
+        />
+        <div className="absolute inset-0 bg-black/50"></div>
+      </div>
+
+      {/* Glass card overlay */}
+      <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
+        <div className="w-full max-w-md space-y-6 rounded-xl bg-background-light/90 dark:bg-background-dark/90 p-8 shadow-soft backdrop-blur-sm">
+          {/* Header */}
+          <div className="text-center">
+            <div className="mb-6 flex justify-center items-center">
+              <div className="bg-primary p-2 rounded-full inline-block">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                </svg>
+              </div>
+              <span className="ml-4 text-2xl font-bold font-inconsolata text-text-light dark:text-text-dark">HMSA</span>
+            </div>
+            <h1 className="text-3xl font-bold text-text-light dark:text-text-dark">Welcome Back</h1>
+            <p className="mt-2 text-sm text-text-light/70 dark:text-text-dark/70">Sign in to your account</p>
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              {...register('password')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-              placeholder="••••••••"
-              disabled={isLoading}
-            />
-            {errors.password && (
-              <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>
+          {/* Login Form */}
+          <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-4">
+            {(error || Object.keys(errors).length > 0) && (
+              <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+                {error || (errors.email?.message as string) || (errors.password?.message as string)}
+              </div>
             )}
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
+            
+            <div>
+              <label htmlFor="email" className="sr-only">Email</label>
               <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                {...register('email')}
+                type="email"
+                id="email"
+                placeholder="Email Address"
+                className="w-full rounded-lg border-subtle-light bg-background-light px-4 py-3 text-text-light placeholder-text-light/50 focus:border-primary focus:ring-primary dark:border-subtle-dark dark:bg-background-dark dark:text-text-dark dark:placeholder-text-dark/50 dark:focus:border-primary dark:focus:ring-primary"
+                autoComplete="email"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+              )}
             </div>
 
-            <div className="text-sm">
-              <a href="#" className="font-medium text-primary-600 hover:text-primary-500">
-                Forgot your password?
-              </a>
+            <div>
+              <label htmlFor="password" className="sr-only">Password</label>
+              <div className="relative">
+              <input
+                {...register('password')}
+                  type={showPassword ? 'text' : 'password'}
+                id="password"
+                placeholder="Password"
+                  className="w-full rounded-lg border-subtle-light bg-background-light px-4 py-3 pr-12 text-text-light placeholder-text-light/50 focus:border-primary focus:ring-primary dark:border-subtle-dark dark:bg-background-dark dark:text-text-dark dark:placeholder-text-dark/50 dark:focus:border-primary dark:focus:ring-primary"
+                autoComplete="current-password"
+              />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-subtle-light dark:text-subtle-dark hover:text-text-light dark:hover:text-text-dark transition-colors"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  <span className="material-symbols-outlined">
+                    {showPassword ? 'visibility_off' : 'visibility'}
+                  </span>
+                </button>
+              </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
+              )}
             </div>
-          </div>
 
-          <div className="pt-2">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? 'Logging in...' : 'Login'}
-            </button>
+            <div>
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="w-full rounded-lg bg-primary px-4 py-3 text-base font-bold text-white shadow-soft transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {status === 'loading' ? 'Signing In...' : 'Sign In'}
+              </button>
+            </div>
+          </form>
+
+          {/* Footer Links */}
+          <div className="text-center text-sm text-text-light/70 dark:text-text-dark/70">
+            <p className="mb-2">
+              Don't have an account?
+              <button onClick={() => navigate('/signup')} className="ml-1 font-medium text-primary hover:underline">Sign Up</button>
+            </p>
+            <a href="#" className="font-medium text-primary hover:underline">Forgot Password?</a>
           </div>
-          
-          <div className="text-center text-sm text-gray-500">
-            <p>For demo: use "super@example.com" for Super Admin access</p>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
   );

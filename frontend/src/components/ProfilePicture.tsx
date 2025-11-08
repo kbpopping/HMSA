@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { User } from 'lucide-react';
 
 interface ProfilePictureProps {
   src?: string;
@@ -19,6 +20,13 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({
 }) => {
   const [imageSrc, setImageSrc] = useState<string | undefined>(src);
   const [isHovered, setIsHovered] = useState(false);
+
+  // Update imageSrc when src prop changes
+  useEffect(() => {
+    if (src) {
+      setImageSrc(src);
+    }
+  }, [src]);
 
   const sizeClasses = {
     sm: 'w-8 h-8',
@@ -68,9 +76,7 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({
             className="w-full h-full object-cover"
           />
         ) : (
-          <span className="material-symbols-outlined text-white text-lg">
-            person
-          </span>
+          <User className="w-1/2 h-1/2 text-white" />
         )}
         
         {editable && (
@@ -83,9 +89,7 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({
             />
             {isHovered && (
               <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                <span className="material-symbols-outlined text-white text-sm">
-                  edit
-                </span>
+                <User className="w-4 h-4 text-white" />
               </div>
             )}
           </>

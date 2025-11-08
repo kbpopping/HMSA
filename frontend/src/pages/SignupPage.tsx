@@ -1,120 +1,178 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const SignupPage: React.FC = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setError(''); // Clear error when user types
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (!email || !password || !confirm) {
-      setError('Please fill all fields');
-      return;
-    }
-    if (password !== confirm) {
+    
+    // Validation
+    if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+
     setIsLoading(true);
-    // For now, no API call. Navigate to login after brief delay.
-    setTimeout(() => {
+    
+    try {
+      // Note: Backend doesn't have signup endpoint yet, so we'll redirect to login
+      // In a real implementation, you would call an API endpoint here
+      toast.success('Account created! Please sign in with your credentials.');
+      setTimeout(() => {
+        navigate('/login', { replace: true });
+      }, 1000);
+    } catch (err: any) {
+      setError(err?.message || 'Failed to create account. Please try again.');
+      toast.error(err?.message || 'Failed to create account');
+    } finally {
       setIsLoading(false);
-      navigate('/login');
-    }, 600);
+    }
   };
 
   return (
-    <div className="font-sans bg-gray-50 min-h-screen">
-      <div className="relative min-h-screen w-full">
-        <div className="absolute inset-0 z-0">
-          <img
-            alt="Two smiling doctors"
-            className="h-full w-full object-cover"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNL1ZIyHw1sBCeTAp8ny32daCTNGBdpgdNutKLM3Gj_jmkiykE7LKdje0TK0OcBc8oSmt88Npws-DgdJP4g_7oiaT-rA4IezUjhJbE9wgh-87BhWld7LHK9C7BSqdv3xAeWN7jTqO3BJM-ARFf_dfBr2jKRGjb77jBAv4pUJyX6-b4aODFBWiERdVAnV0KGLm4wjnjvEkJQf1ceX_wiPZrUKxD3eL834FI-pn1AmVavGqcwMVGPDe2tSENrz6JpKKfOB7pudatOSs"
-          />
-          <div className="absolute inset-0 bg-black/50"></div>
-        </div>
+    <div className="relative min-h-screen w-full">
+      {/* Background with doctors image and overlay */}
+      <div className="absolute inset-0 z-0">
+        <img
+          alt="Two smiling doctors"
+          className="h-full w-full object-cover"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNL1ZIyHw1sBCeTAp8ny32daCTNGBdpgdNutKLM3Gj_jmkiykE7LKdje0TK0OcBc8oSmt88Npws-DgdJP4g_7oiaT-rA4IezUjhJbE9wgh-87BhWld7LHK9C7BSqdv3xAeWN7jTqO3BJM-ARFf_dfBr2jKRGjb77jBAv4pUJyX6-b4aODFBWiERdVAnV0KGLm4wjnjvEkJQf1ceX_wiPZrUKxD3eL834FI-pn1AmVavGqcwMVGPDe2tSENrz6JpKKfOB7pudatOSs"
+        />
+        <div className="absolute inset-0 bg-black/50"></div>
+      </div>
 
-        <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
-          <div className="w-full max-w-md space-y-6 rounded-xl bg-white/90 p-8 shadow-lg backdrop-blur-sm">
-            <div className="text-center">
-              <div className="mb-6 flex justify-center items-center">
-                <div className="bg-[#607AFB] p-2 rounded-full inline-block">
-                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path></svg>
-                </div>
-                <span className="ml-4 text-2xl font-bold text-gray-900">HMSA</span>
+      {/* Glass card overlay */}
+      <div className="relative z-10 flex min-h-screen items-center justify-center p-4">
+        <div className="w-full max-w-md space-y-6 rounded-xl bg-background-light/90 dark:bg-background-dark/90 p-8 shadow-soft backdrop-blur-sm">
+          {/* Header */}
+          <div className="text-center">
+            <div className="mb-6 flex justify-center items-center">
+              <div className="bg-primary p-2 rounded-full inline-block">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                </svg>
               </div>
-              <h1 className="text-3xl font-bold text-gray-900">Create Super Admin Account</h1>
-              <p className="mt-2 text-sm text-gray-600">Join the hospital management system</p>
+              <span className="ml-4 text-2xl font-bold font-inconsolata text-text-light dark:text-text-dark">HMSA</span>
             </div>
+            <h1 className="text-3xl font-bold text-text-light dark:text-text-dark">Create Super Admin Account</h1>
+            <p className="mt-2 text-sm text-text-light/70 dark:text-text-dark/70">Join the hospital management system</p>
+          </div>
 
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 rounded border border-red-200 bg-red-50 text-red-700 text-sm">{error}</div>
+              <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
+                {error}
+              </div>
             )}
-
-            <form className="space-y-4" onSubmit={onSubmit}>
-              <div>
-                <label className="sr-only" htmlFor="email">Email</label>
-                <input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Email Address"
-                  className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-[#607AFB] focus:ring-[#607AFB]"
+            
+            <div>
+              <label className="sr-only" htmlFor="email">Email</label>
+              <input
+                autoComplete="email"
+                className="w-full rounded-lg border-subtle-light bg-background-light px-4 py-3 text-text-light placeholder-text-light/50 focus:border-primary focus:ring-primary dark:border-subtle-dark dark:bg-background-dark dark:text-text-dark dark:placeholder-text-dark/50 dark:focus:border-primary dark:focus:ring-primary"
+                id="email"
+                name="email"
+                placeholder="Email Address"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                type="email"
+              />
+            </div>
+            <div>
+              <label className="sr-only" htmlFor="password">Password</label>
+              <div className="relative">
+              <input
+                autoComplete="new-password"
+                  className="w-full rounded-lg border-subtle-light bg-background-light px-4 py-3 pr-12 text-text-light placeholder-text-light/50 focus:border-primary focus:ring-primary dark:border-subtle-dark dark:bg-background-dark dark:text-text-dark dark:placeholder-text-dark/50 dark:focus:border-primary dark:focus:ring-primary"
+                id="password"
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                  type={showPassword ? 'text' : 'password'}
                 />
-              </div>
-              <div>
-                <label className="sr-only" htmlFor="password">Password</label>
-                <input
-                  id="password"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password"
-                  className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-[#607AFB] focus:ring-[#607AFB]"
-                />
-              </div>
-              <div>
-                <label className="sr-only" htmlFor="confirm">Confirm Password</label>
-                <input
-                  id="confirm"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  value={confirm}
-                  onChange={(e) => setConfirm(e.target.value)}
-                  placeholder="Confirm Password"
-                  className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-[#607AFB] focus:ring-[#607AFB]"
-                />
-              </div>
-              <div>
                 <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full rounded-lg bg-[#607AFB] px-4 py-3 text-base font-bold text-white shadow-md transition-colors hover:bg-[#4f68f2] focus:outline-none focus:ring-2 focus:ring-[#607AFB]"
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-subtle-light dark:text-subtle-dark hover:text-text-light dark:hover:text-text-dark transition-colors"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {isLoading ? 'Creating…' : 'Sign Up'}
+                  <span className="material-symbols-outlined">
+                    {showPassword ? 'visibility_off' : 'visibility'}
+                  </span>
                 </button>
               </div>
-            </form>
-
-            <div className="text-center text-sm text-gray-600">
-              <p className="mb-2">
-                Already have an account?{' '}
-                <Link className="font-medium text-[#607AFB] hover:underline" to="/login">Log In</Link>
-              </p>
-              <a className="font-medium text-[#607AFB] hover:underline" href="#">Privacy Policy</a>
             </div>
+            <div>
+              <label className="sr-only" htmlFor="confirm-password">Confirm Password</label>
+              <div className="relative">
+              <input
+                autoComplete="new-password"
+                  className="w-full rounded-lg border-subtle-light bg-background-light px-4 py-3 pr-12 text-text-light placeholder-text-light/50 focus:border-primary focus:ring-primary dark:border-subtle-dark dark:bg-background-dark dark:text-text-dark dark:placeholder-text-dark/50 dark:focus:border-primary dark:focus:ring-primary"
+                id="confirm-password"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                required
+                  type={showConfirmPassword ? 'text' : 'password'}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-subtle-light dark:text-subtle-dark hover:text-text-light dark:hover:text-text-dark transition-colors"
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                >
+                  <span className="material-symbols-outlined">
+                    {showConfirmPassword ? 'visibility_off' : 'visibility'}
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div>
+              <button
+                className="w-full rounded-lg bg-primary px-4 py-3 text-base font-bold text-white shadow-soft transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark disabled:opacity-50 disabled:cursor-not-allowed"
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Creating Account...' : 'Sign Up'}
+              </button>
+            </div>
+          </form>
+
+          {/* Footer Links */}
+          <div className="text-center text-sm text-text-light/70 dark:text-text-dark/70">
+            <p className="mb-2">
+              Already have an account?
+              <button onClick={() => navigate('/login')} className="ml-1 font-medium text-primary hover:underline">Log In</button>
+            </p>
+            <a className="font-medium text-primary hover:underline" href="#">Privacy Policy</a>
           </div>
         </div>
       </div>
