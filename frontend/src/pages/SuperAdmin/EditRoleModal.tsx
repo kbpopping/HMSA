@@ -7,7 +7,7 @@ import { Role } from './Roles';
 interface EditRoleModalProps {
   role: Role;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (roleName?: string, isDelete?: boolean) => void;
 }
 
 // Available permissions list
@@ -44,11 +44,11 @@ const EditRoleModal = ({ role, onClose, onSuccess }: EditRoleModalProps) => {
 
   const updateMutation = useMutation({
     mutationFn: (payload: any) => SuperAPI.updateRole(role.id, payload),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['super', 'roles'] });
       queryClient.invalidateQueries({ queryKey: ['super', 'users'] }); // Refresh user role options
       toast.success('Role updated successfully!');
-      onSuccess();
+      onSuccess(variables.name || formData.name);
     },
     onError: (error: any) => {
       toast.error(error.message || 'Failed to update role');

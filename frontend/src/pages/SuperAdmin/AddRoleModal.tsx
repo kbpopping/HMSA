@@ -5,7 +5,7 @@ import { SuperAPI } from '../../api/endpoints';
 
 interface AddRoleModalProps {
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (roleName?: string) => void;
 }
 
 // Available permissions list
@@ -42,10 +42,10 @@ const AddRoleModal = ({ onClose, onSuccess }: AddRoleModalProps) => {
 
   const createMutation = useMutation({
     mutationFn: (payload: any) => SuperAPI.createRole(payload),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['super', 'roles'] });
       queryClient.invalidateQueries({ queryKey: ['super', 'users'] }); // Refresh user role options
-      onSuccess();
+      onSuccess(variables.name);
     },
     onError: (error: any) => {
       toast.error(error.message || 'Failed to create role');

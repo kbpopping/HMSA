@@ -7,7 +7,7 @@ import { Role } from './Roles';
 
 interface AddUserModalProps {
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (userData?: { name: string; email: string; role: string }) => void;
 }
 
 /**
@@ -48,13 +48,17 @@ const AddUserModal = ({ onClose, onSuccess }: AddUserModalProps) => {
 
   const createMutation = useMutation({
     mutationFn: (payload: any) => SuperAPI.createUser(payload),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       // PRODUCTION: Backend will handle hospital admin count update
       // MOCK MODE: Invalidate all related queries to refresh data
       queryClient.invalidateQueries({ queryKey: ['super', 'users'] });
       queryClient.invalidateQueries({ queryKey: ['super', 'hospitals'] });
       queryClient.invalidateQueries({ queryKey: ['super', 'roles'] }); // Refresh role counts
-      onSuccess();
+      onSuccess({
+        name: variables.name,
+        email: variables.email,
+        role: variables.role,
+      });
     },
     onError: (error: any) => {
       toast.error(error.message || 'Failed to create user');

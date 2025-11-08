@@ -5,7 +5,7 @@ import { SuperAPI } from '../../api/endpoints';
 
 interface CreateHospitalModalProps {
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (hospitalName?: string) => void;
 }
 
 const CreateHospitalModal = ({ onClose, onSuccess }: CreateHospitalModalProps) => {
@@ -27,12 +27,12 @@ const CreateHospitalModal = ({ onClose, onSuccess }: CreateHospitalModalProps) =
       adminEmail: string;
       adminPassword: string;
     }) => SuperAPI.createHospital(payload),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       // PRODUCTION: Backend will handle user creation
       // MOCK MODE: Invalidate both queries to refresh data
       queryClient.invalidateQueries({ queryKey: ['super', 'hospitals'] });
       queryClient.invalidateQueries({ queryKey: ['super', 'users'] });
-      onSuccess();
+      onSuccess(variables.name);
     },
     onError: (error: any) => {
       toast.error(error.message || 'Failed to create hospital');

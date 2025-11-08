@@ -8,7 +8,7 @@ import { Role } from './Roles';
 interface EditUserModalProps {
   user: User;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (userData?: { name: string; email: string; role: string; previousRole?: string; isDelete?: boolean }) => void;
 }
 
 /**
@@ -47,14 +47,21 @@ const EditUserModal = ({ user, onClose, onSuccess }: EditUserModalProps) => {
 
   const updateMutation = useMutation({
     mutationFn: (payload: any) => SuperAPI.updateUser(user.id, payload),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       // PRODUCTION: Backend will handle hospital admin count update
       // MOCK MODE: Invalidate all related queries to refresh data
       queryClient.invalidateQueries({ queryKey: ['super', 'users'] });
       queryClient.invalidateQueries({ queryKey: ['super', 'hospitals'] });
       queryClient.invalidateQueries({ queryKey: ['super', 'roles'] }); // Refresh role counts
       toast.success('User updated successfully!');
-      onSuccess();
+      
+      const roleChanged = user.role !== variables.role;
+      onSuccess({
+        name: variables.name || user.name,
+        email: variables.email || user.email,
+        role: variables.role || user.role,
+        previousRole: roleChanged ? user.role : undefined,
+      });
     },
     onError: (error: any) => {
       toast.error(error.message || 'Failed to update user');

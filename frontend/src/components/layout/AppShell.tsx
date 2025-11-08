@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useProfile } from '../../store/profile';
 import { useAuth } from '../../store/auth';
+import NotificationBell from '../NotificationBell';
 
 interface AppShellProps extends PropsWithChildren {
   role?: 'super_admin' | 'hospital_admin';
@@ -17,6 +18,7 @@ interface AppShellProps extends PropsWithChildren {
 const AppShell = ({ children, role }: AppShellProps) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // Subscribe to profile store reactively - will re-render when profile changes
   const profileName = useProfile((state) => state.name);
@@ -65,6 +67,23 @@ const AppShell = ({ children, role }: AppShellProps) => {
     setShowUsersDropdown(isUsersPage);
   }, [isUsersPage]);
 
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
   const handleLogout = async () => {
     try {
       // PRODUCTION: Replace with real auth logout
@@ -79,14 +98,37 @@ const AppShell = ({ children, role }: AppShellProps) => {
 
   return (
     <div className="flex min-h-screen w-full bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark font-display">
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar - matching exact HTML design */}
-      <aside className="w-64 flex-shrink-0 bg-background-light dark:bg-background-dark p-6 border-r border-border-light dark:border-border-dark flex flex-col relative">
+      <aside className={clsx(
+        'w-64 flex-shrink-0 bg-background-light dark:bg-background-dark border-r border-border-light dark:border-border-dark flex flex-col relative transition-transform duration-300 ease-in-out z-50',
+        'fixed lg:static h-screen lg:h-auto',
+        mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+        'p-4 sm:p-6'
+      )}>
         {/* Logo */}
-        <div className="flex items-center gap-3 mb-10">
-          <div className="p-2 bg-primary rounded-lg text-white">
-            <span className="material-symbols-outlined">emergency</span>
+        <div className="flex items-center justify-between gap-3 mb-6 sm:mb-8 lg:mb-10">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="p-1.5 sm:p-2 bg-primary rounded-lg text-white">
+              <span className="material-symbols-outlined text-lg sm:text-xl">emergency</span>
+            </div>
+            <h1 className="text-lg sm:text-xl font-bold text-foreground-light dark:text-foreground-dark">HMSA</h1>
           </div>
-          <h1 className="text-xl font-bold text-foreground-light dark:text-foreground-dark">HMSA</h1>
+          {/* Mobile Close Button */}
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="lg:hidden p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 text-foreground-light dark:text-foreground-dark touch-manipulation"
+            aria-label="Close menu"
+          >
+            <span className="material-symbols-outlined text-xl">close</span>
+          </button>
         </div>
 
         {/* Navigation */}
@@ -102,18 +144,18 @@ const AppShell = ({ children, role }: AppShellProps) => {
                   <button
                     onClick={() => setShowUsersDropdown(!showUsersDropdown)}
                     className={clsx(
-                      'w-full flex items-center justify-between gap-3 px-4 py-2 rounded-lg transition-colors',
+                      'w-full flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-lg transition-colors touch-manipulation text-sm sm:text-base',
                       isUsersPage
                         ? 'bg-primary/20 text-primary font-bold'
                         : 'hover:bg-primary/10 dark:hover:bg-primary/20 text-foreground-light dark:text-foreground-dark'
                     )}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="material-symbols-outlined">{item.icon}</span>
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <span className="material-symbols-outlined text-lg sm:text-xl">{item.icon}</span>
                       <span>{item.label}</span>
                     </div>
                     <span className={clsx(
-                      'material-symbols-outlined transition-transform',
+                      'material-symbols-outlined text-lg sm:text-xl transition-transform',
                       showUsersDropdown && 'rotate-180'
                     )}>
                       expand_more
@@ -122,41 +164,41 @@ const AppShell = ({ children, role }: AppShellProps) => {
                   
                   {/* Dropdown menu */}
                   {showUsersDropdown && (
-                    <div className="mt-2 ml-4 space-y-2">
+                    <div className="mt-2 ml-3 sm:ml-4 space-y-2">
                       <Link
                         to="/super/users"
                         className={clsx(
-                          'flex items-center gap-3 px-4 py-2 rounded-lg transition-colors',
+                          'flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-lg transition-colors touch-manipulation text-sm sm:text-base',
                           location.pathname === '/super/users'
                             ? 'bg-primary/20 text-primary font-bold'
                             : 'hover:bg-primary/10 dark:hover:bg-primary/20 text-foreground-light dark:text-foreground-dark'
                         )}
                       >
-                        <span className="material-symbols-outlined">person</span>
+                        <span className="material-symbols-outlined text-lg sm:text-xl">person</span>
                         <span>Users</span>
                       </Link>
                       <Link
                         to="/super/users-roles"
                         className={clsx(
-                          'flex items-center gap-3 px-4 py-2 rounded-lg transition-colors',
+                          'flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-lg transition-colors touch-manipulation text-sm sm:text-base',
                           location.pathname === '/super/users-roles'
                             ? 'bg-primary/20 text-primary font-bold'
                             : 'hover:bg-primary/10 dark:hover:bg-primary/20 text-foreground-light dark:text-foreground-dark'
                         )}
                       >
-                        <span className="material-symbols-outlined">verified_user</span>
+                        <span className="material-symbols-outlined text-lg sm:text-xl">verified_user</span>
                         <span>Roles</span>
                       </Link>
                       <Link
                         to="/super/users/monitoring"
                         className={clsx(
-                          'flex items-center gap-3 px-4 py-2 rounded-lg transition-colors',
+                          'flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-lg transition-colors touch-manipulation text-sm sm:text-base',
                           location.pathname === '/super/users/monitoring'
                             ? 'bg-primary/20 text-primary font-bold'
                             : 'hover:bg-primary/10 dark:hover:bg-primary/20 text-foreground-light dark:text-foreground-dark'
                         )}
                       >
-                        <span className="material-symbols-outlined">monitoring</span>
+                        <span className="material-symbols-outlined text-lg sm:text-xl">monitoring</span>
                         <span>Monitoring</span>
                       </Link>
                     </div>
@@ -170,13 +212,13 @@ const AppShell = ({ children, role }: AppShellProps) => {
                 key={item.to}
                 to={item.to}
                 className={clsx(
-                  'flex items-center gap-3 px-4 py-2 rounded-lg transition-colors',
+                  'flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-lg transition-colors touch-manipulation text-sm sm:text-base',
                   isActive
                     ? 'bg-primary/20 text-primary font-bold'
                     : 'hover:bg-primary/10 dark:hover:bg-primary/20 text-foreground-light dark:text-foreground-dark'
                 )}
               >
-                <span className="material-symbols-outlined">{item.icon}</span>
+                <span className="material-symbols-outlined text-lg sm:text-xl">{item.icon}</span>
                 <span>{item.label}</span>
               </Link>
             );
@@ -184,21 +226,21 @@ const AppShell = ({ children, role }: AppShellProps) => {
         </nav>
 
         {/* Logout and User Profile - positioned at bottom */}
-        <div className="absolute bottom-6 w-[calc(100%-3rem)]">
+        <div className="absolute bottom-4 sm:bottom-6 w-[calc(100%-2rem)] sm:w-[calc(100%-3rem)]">
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors text-foreground-light dark:text-foreground-dark mb-4"
+            className="w-full flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors text-foreground-light dark:text-foreground-dark mb-3 sm:mb-4 touch-manipulation text-sm sm:text-base"
           >
-            <span className="material-symbols-outlined">logout</span>
+            <span className="material-symbols-outlined text-lg sm:text-xl">logout</span>
             <span>Logout</span>
           </button>
 
           {/* User Profile */}
-          <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors">
+          <div className="flex items-center gap-2 sm:gap-3 p-2 rounded-lg hover:bg-primary/5 dark:hover:bg-primary/10 transition-colors">
             <img 
               alt="User Avatar" 
-              className="size-10 rounded-full object-cover border-2 border-border-light dark:border-border-dark" 
+              className="size-8 sm:size-10 rounded-full object-cover border-2 border-border-light dark:border-border-dark flex-shrink-0" 
               src={user.profilePicture}
               onError={(e) => {
                 // Fallback if image fails to load
@@ -207,7 +249,7 @@ const AppShell = ({ children, role }: AppShellProps) => {
               }}
             />
             <div className="flex-1 min-w-0">
-              <p className="font-bold text-foreground-light dark:text-foreground-dark truncate text-sm">{user.name}</p>
+              <p className="font-bold text-foreground-light dark:text-foreground-dark truncate text-xs sm:text-sm">{user.name}</p>
               <p className="text-xs text-subtle-light dark:text-subtle-dark truncate">{user.email}</p>
             </div>
           </div>
@@ -215,7 +257,30 @@ const AppShell = ({ children, role }: AppShellProps) => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8 lg:p-12 overflow-y-auto bg-background-light dark:bg-background-dark">
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 xl:p-12 overflow-y-auto bg-background-light dark:bg-background-dark w-full lg:w-auto">
+        {/* Mobile Header with Menu Button */}
+        <div className="lg:hidden flex items-center justify-between mb-4 pb-4 border-b border-border-light dark:border-border-dark">
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 text-foreground-light dark:text-foreground-dark"
+            aria-label="Open menu"
+          >
+            <span className="material-symbols-outlined text-2xl">menu</span>
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 bg-primary rounded-lg text-white">
+              <span className="material-symbols-outlined text-sm">emergency</span>
+            </div>
+            <h1 className="text-lg font-bold text-foreground-light dark:text-foreground-dark">HMSA</h1>
+          </div>
+          <NotificationBell />
+        </div>
+        
+        {/* Desktop Header with Notification Bell */}
+        <div className="hidden lg:flex justify-end mb-4 sm:mb-6">
+          <NotificationBell />
+        </div>
+        
         {children}
       </main>
     </div>

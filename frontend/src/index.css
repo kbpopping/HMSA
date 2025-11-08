@@ -35,3 +35,8 @@
 .font-inconsolata {
   font-family: 'Inconsolata', monospace;
 }
+
+/* Touch manipulation for better mobile interaction */
+.touch-manipulation {
+  touch-action: manipulation;
+}

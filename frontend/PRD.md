@@ -93,6 +93,7 @@ This addendum specifies the **technology choices**, **information architecture**
   * Templates
   * Messaging (Outbound queue & Notifications)
   * Settings (Hospital profile, Staff logins)
+  * Billings (Overview, Invoice & Payments, Payroll & Salaries Financial Reports, Account Payable, Account Receivable)
 
 ---
 
@@ -192,6 +193,11 @@ This addendum specifies the **technology choices**, **information architecture**
    * Hospital profile (name, country, timezone)
    * Staff accounts (list/add deactivate)
    * API keys (for partner integrations) *(later)*
+
+8. **Billings**
+
+  *Overview (Total earnings, total revenue, accounts receivable, Revenue generated(chart), Top revenue contributors, Download reports)
+  *Accounts payable (Add bill/expense, Filter by search, status, category and date range)
 
 ---
 

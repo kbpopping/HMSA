@@ -7,6 +7,7 @@ import { useUI } from '../../store/ui';
 import { use2FA } from '../../store/twoFactor';
 import { useAuth } from '../../store/auth';
 import { useNavigate } from 'react-router-dom';
+import { useNotifications } from '../../store/notifications';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Settings = () => {
   const { theme, toggleTheme } = useUI();
   const { enabled: twoFactorEnabled, method: twoFactorMethod, enable2FA, disable2FA, setBackupCodes } = use2FA();
   const { logout } = useAuth();
+  const { addNotification } = useNotifications();
   
   const [telemetryEnabled, setTelemetryEnabled] = useState(true);
   const [profileData, setProfileData] = useState({
@@ -121,6 +123,14 @@ const Settings = () => {
       setMessage('Password changed successfully!');
       setProfileData(prev => ({ ...prev, currentPassword: '', newPassword: '', confirmPassword: '' }));
       setTimeout(() => setMessage(''), 3000);
+      
+      // Add notification
+      addNotification({
+        type: 'password_changed',
+        title: 'Password Changed',
+        message: `Your password has been successfully updated. If this wasn't you, please contact support immediately.`,
+        route: '/super/settings',
+      });
     } catch (error: any) {
       const errorMsg = error?.message || 'Failed to change password';
       setMessage(errorMsg);
@@ -282,9 +292,9 @@ const Settings = () => {
     <AppShell role="super_admin">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground-light dark:text-foreground-dark mb-2">Settings</h1>
-          <p className="text-subtle-light dark:text-subtle-dark">Manage your account settings and preferences</p>
+        <header className="mb-4 sm:mb-6 lg:mb-8">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground-light dark:text-foreground-dark mb-1 sm:mb-2">Settings</h1>
+          <p className="text-sm sm:text-base text-subtle-light dark:text-subtle-dark">Manage your account settings and preferences</p>
         </header>
 
         {/* Message */}
@@ -299,34 +309,34 @@ const Settings = () => {
         )}
 
         {/* Tabs */}
-        <div className="bg-card-light dark:bg-card-dark rounded-xl shadow-soft mb-6">
-          <div className="border-b border-border-light dark:border-border-dark">
-            <nav className="flex space-x-8 px-6">
+        <div className="bg-card-light dark:bg-card-dark rounded-xl shadow-soft mb-4 sm:mb-6">
+          <div className="border-b border-border-light dark:border-border-dark overflow-x-auto">
+            <nav className="flex space-x-4 sm:space-x-8 px-3 sm:px-6 min-w-max sm:min-w-0">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  className={`flex items-center gap-1 sm:gap-2 py-3 sm:py-4 px-1 sm:px-2 border-b-2 font-medium text-xs sm:text-sm transition-colors touch-manipulation whitespace-nowrap ${
                     activeTab === tab.id
                       ? 'border-primary text-primary'
                       : 'border-transparent text-subtle-light dark:text-subtle-dark hover:text-foreground-light dark:hover:text-foreground-dark hover:border-border-light dark:hover:border-border-dark'
                   }`}
                 >
-                  <span className="material-symbols-outlined text-sm">{tab.icon}</span>
-                  {tab.label}
+                  <span className="material-symbols-outlined text-base sm:text-lg">{tab.icon}</span>
+                  <span className="hidden sm:inline">{tab.label}</span>
                 </button>
               ))}
             </nav>
           </div>
 
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {/* Profile Tab */}
             {activeTab === 'profile' && (
               <div className="space-y-6">
                 {/* Profile Picture Section */}
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-4">Profile Picture</h3>
-                  <div className="flex items-center gap-6 p-6 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-3 sm:mb-4">Profile Picture</h3>
+                  <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 p-4 sm:p-6 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
                     <ProfilePicture
                       src={profileData.profilePicture || profile.profilePicture || ''}
                       size="lg"
@@ -364,11 +374,11 @@ const Settings = () => {
 
                 {/* Profile Information Section */}
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-4">Profile Information</h3>
-                  <form onSubmit={handleProfileUpdate} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-3 sm:mb-4">Profile Information</h3>
+                  <form onSubmit={handleProfileUpdate} className="space-y-3 sm:space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-foreground-light dark:text-foreground-dark mb-2">
+                        <label className="block text-xs sm:text-sm font-medium text-foreground-light dark:text-foreground-dark mb-2">
                           Full Name
                         </label>
                         <input
@@ -379,7 +389,7 @@ const Settings = () => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-foreground-light dark:text-foreground-dark mb-2">
+                        <label className="block text-xs sm:text-sm font-medium text-foreground-light dark:text-foreground-dark mb-2">
                           Email Address
                         </label>
                         <input
@@ -390,11 +400,11 @@ const Settings = () => {
                         />
                       </div>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-end pt-2">
                       <button
                         type="submit"
                         disabled={isLoading}
-                        className="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+                        className="w-full sm:w-auto bg-primary text-white px-6 py-2.5 sm:py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm sm:text-base touch-manipulation"
                       >
                         {isLoading ? 'Updating...' : 'Update Profile'}
                       </button>
@@ -409,10 +419,10 @@ const Settings = () => {
               <div className="space-y-6">
                 {/* Change Password Section */}
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-4">Change Password</h3>
-                  <form onSubmit={handlePasswordChange} className="space-y-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-3 sm:mb-4">Change Password</h3>
+                  <form onSubmit={handlePasswordChange} className="space-y-3 sm:space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-foreground-light dark:text-foreground-dark mb-2">
+                      <label className="block text-xs sm:text-sm font-medium text-foreground-light dark:text-foreground-dark mb-2">
                         Current Password
                       </label>
                       <div className="relative">
@@ -434,9 +444,9 @@ const Settings = () => {
                         </button>
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-foreground-light dark:text-foreground-dark mb-2">
+                        <label className="block text-xs sm:text-sm font-medium text-foreground-light dark:text-foreground-dark mb-2">
                           New Password
                         </label>
                         <div className="relative">
@@ -459,7 +469,7 @@ const Settings = () => {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-foreground-light dark:text-foreground-dark mb-2">
+                        <label className="block text-xs sm:text-sm font-medium text-foreground-light dark:text-foreground-dark mb-2">
                           Confirm New Password
                         </label>
                         <div className="relative">
@@ -482,11 +492,11 @@ const Settings = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-end pt-2">
                       <button
                         type="submit"
                         disabled={isLoading}
-                        className="bg-primary text-white px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+                        className="w-full sm:w-auto bg-primary text-white px-6 py-2.5 sm:py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm sm:text-base touch-manipulation"
                       >
                         {isLoading ? 'Changing...' : 'Change Password'}
                       </button>
@@ -495,38 +505,38 @@ const Settings = () => {
                 </div>
 
                 {/* Two-Factor Authentication Section */}
-                <div className="border-t border-border-light dark:border-border-dark pt-6">
-                  <h3 className="text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-4">Two-Factor Authentication</h3>
+                <div className="border-t border-border-light dark:border-border-dark pt-4 sm:pt-6">
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-3 sm:mb-4">Two-Factor Authentication</h3>
                   
                   {!twoFactorEnabled ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {twoFactorSetup.step === 'select' && (
-                        <div className="p-4 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
-                          <p className="text-sm text-subtle-light dark:text-subtle-dark mb-4">
+                        <div className="p-3 sm:p-4 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
+                          <p className="text-xs sm:text-sm text-subtle-light dark:text-subtle-dark mb-3 sm:mb-4">
                             Add an extra layer of security to your account by enabling two-factor authentication.
                           </p>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             <button
                               onClick={() => handle2FASetup('google')}
-                              className="p-4 border border-border-light dark:border-border-dark rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors text-left"
+                              className="p-3 sm:p-4 border border-border-light dark:border-border-dark rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors text-left touch-manipulation"
                             >
-                              <div className="flex items-center gap-3 mb-2">
-                                <span className="material-symbols-outlined text-primary">phone_android</span>
-                                <h4 className="font-medium text-foreground-light dark:text-foreground-dark">Google Authenticator</h4>
+                              <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                                <span className="material-symbols-outlined text-primary text-lg sm:text-xl">phone_android</span>
+                                <h4 className="font-medium text-sm sm:text-base text-foreground-light dark:text-foreground-dark">Google Authenticator</h4>
                               </div>
-                              <p className="text-sm text-subtle-light dark:text-subtle-dark">
+                              <p className="text-xs sm:text-sm text-subtle-light dark:text-subtle-dark">
                                 Use Google Authenticator app to generate verification codes
                               </p>
                             </button>
                             <button
                               onClick={() => handle2FASetup('authenticator')}
-                              className="p-4 border border-border-light dark:border-border-dark rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors text-left"
+                              className="p-3 sm:p-4 border border-border-light dark:border-border-dark rounded-lg hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors text-left touch-manipulation"
                             >
-                              <div className="flex items-center gap-3 mb-2">
-                                <span className="material-symbols-outlined text-primary">security</span>
-                                <h4 className="font-medium text-foreground-light dark:text-foreground-dark">Authenticator App</h4>
+                              <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                                <span className="material-symbols-outlined text-primary text-lg sm:text-xl">security</span>
+                                <h4 className="font-medium text-sm sm:text-base text-foreground-light dark:text-foreground-dark">Authenticator App</h4>
                               </div>
-                              <p className="text-sm text-subtle-light dark:text-subtle-dark">
+                              <p className="text-xs sm:text-sm text-subtle-light dark:text-subtle-dark">
                                 Use any authenticator app (Authy, Microsoft Authenticator, etc.)
                               </p>
                             </button>
@@ -535,12 +545,12 @@ const Settings = () => {
                       )}
 
                       {twoFactorSetup.step === 'qr' && (
-                        <div className="p-4 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
-                          <p className="text-sm text-subtle-light dark:text-subtle-dark mb-4">
+                        <div className="p-3 sm:p-4 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
+                          <p className="text-xs sm:text-sm text-subtle-light dark:text-subtle-dark mb-3 sm:mb-4">
                             Scan this QR code with your authenticator app:
                           </p>
-                          <div className="flex flex-col items-center gap-4">
-                            <img src={twoFactorSetup.qrCode} alt="QR Code" className="w-48 h-48 border border-border-light dark:border-border-dark rounded-lg" />
+                          <div className="flex flex-col items-center gap-3 sm:gap-4">
+                            <img src={twoFactorSetup.qrCode} alt="QR Code" className="w-40 h-40 sm:w-48 sm:h-48 border border-border-light dark:border-border-dark rounded-lg" />
                             <div className="w-full">
                               <p className="text-xs text-subtle-light dark:text-subtle-dark mb-2">Or enter this code manually:</p>
                               <code className="block p-2 bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark rounded text-sm font-mono text-foreground-light dark:text-foreground-dark break-all">
@@ -548,7 +558,7 @@ const Settings = () => {
                               </code>
                             </div>
                             <div className="w-full">
-                              <label className="block text-sm font-medium text-foreground-light dark:text-foreground-dark mb-2">
+                              <label className="block text-xs sm:text-sm font-medium text-foreground-light dark:text-foreground-dark mb-2">
                                 Enter verification code from your app
                               </label>
                               <input
@@ -556,21 +566,21 @@ const Settings = () => {
                                 value={twoFactorSetup.verificationCode}
                                 onChange={(e) => setTwoFactorSetup(prev => ({ ...prev, verificationCode: e.target.value.replace(/\D/g, '').slice(0, 6) }))}
                                 placeholder="000000"
-                                className="w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark focus:ring-primary focus:border-primary text-center text-2xl tracking-widest"
+                                className="w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark focus:ring-primary focus:border-primary text-center text-xl sm:text-2xl tracking-widest"
                                 maxLength={6}
                               />
                             </div>
-                            <div className="flex gap-3">
+                            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
                               <button
                                 onClick={() => setTwoFactorSetup({ step: 'select', selectedMethod: null, qrCode: '', secret: '', verificationCode: '', backupCodes: [] })}
-                                className="px-4 py-2 border border-border-light dark:border-border-dark rounded-lg text-foreground-light dark:text-foreground-dark hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors"
+                                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 border border-border-light dark:border-border-dark rounded-lg text-foreground-light dark:text-foreground-dark hover:bg-primary/10 dark:hover:bg-primary/20 transition-colors text-sm sm:text-base touch-manipulation"
                               >
                                 Cancel
                               </button>
                               <button
                                 onClick={handle2FAVerify}
                                 disabled={twoFactorSetup.verificationCode.length !== 6}
-                                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+                                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm sm:text-base touch-manipulation"
                               >
                                 Verify
                               </button>
@@ -580,24 +590,24 @@ const Settings = () => {
                       )}
 
                       {twoFactorSetup.step === 'backup' && (
-                        <div className="p-4 border border-yellow-200 dark:border-yellow-800 rounded-lg bg-yellow-50 dark:bg-yellow-900/20">
-                          <div className="flex items-start gap-3 mb-4">
-                            <span className="material-symbols-outlined text-yellow-600 dark:text-yellow-400">warning</span>
-                            <div>
-                              <h4 className="font-medium text-yellow-800 dark:text-yellow-300 mb-2">Save Your Backup Codes</h4>
-                              <p className="text-sm text-yellow-700 dark:text-yellow-400 mb-4">
+                        <div className="p-3 sm:p-4 border border-yellow-200 dark:border-yellow-800 rounded-lg bg-yellow-50 dark:bg-yellow-900/20">
+                          <div className="flex items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
+                            <span className="material-symbols-outlined text-yellow-600 dark:text-yellow-400 text-lg sm:text-xl flex-shrink-0">warning</span>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium text-sm sm:text-base text-yellow-800 dark:text-yellow-300 mb-2">Save Your Backup Codes</h4>
+                              <p className="text-xs sm:text-sm text-yellow-700 dark:text-yellow-400 mb-3 sm:mb-4">
                                 These codes can be used to access your account if you lose your authenticator device. Store them in a safe place.
                               </p>
-                              <div className="grid grid-cols-2 gap-2 mb-4">
+                              <div className="grid grid-cols-2 gap-2 mb-3 sm:mb-4">
                                 {twoFactorSetup.backupCodes.map((code, idx) => (
-                                  <code key={idx} className="p-2 bg-white dark:bg-background-dark border border-yellow-200 dark:border-yellow-800 rounded text-sm font-mono text-center">
+                                  <code key={idx} className="p-2 bg-white dark:bg-background-dark border border-yellow-200 dark:border-yellow-800 rounded text-xs sm:text-sm font-mono text-center break-all">
                                     {code}
                                   </code>
                                 ))}
                               </div>
                               <button
                                 onClick={handle2FAComplete}
-                                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
+                                className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm sm:text-base touch-manipulation"
                               >
                                 I've Saved My Backup Codes
                               </button>
@@ -635,20 +645,21 @@ const Settings = () => {
 
             {/* Preferences Tab */}
             {activeTab === 'preferences' && (
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-4">Appearance</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
-                      <div>
-                        <h4 className="font-medium text-foreground-light dark:text-foreground-dark">Dark Mode</h4>
-                        <p className="text-sm text-subtle-light dark:text-subtle-dark">Switch between light and dark themes</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-3 sm:mb-4">Appearance</h3>
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="flex items-center justify-between p-3 sm:p-4 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
+                      <div className="flex-1 min-w-0 pr-4">
+                        <h4 className="font-medium text-sm sm:text-base text-foreground-light dark:text-foreground-dark">Dark Mode</h4>
+                        <p className="text-xs sm:text-sm text-subtle-light dark:text-subtle-dark">Switch between light and dark themes</p>
                       </div>
                       <button
                         onClick={handleThemeToggle}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 touch-manipulation ${
                           theme === 'dark' ? 'bg-primary' : 'bg-subtle-light dark:bg-subtle-dark'
                         }`}
+                        aria-label="Toggle dark mode"
                       >
                         <span
                           className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -661,18 +672,19 @@ const Settings = () => {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-4">Privacy & Data</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
-                      <div>
-                        <h4 className="font-medium text-foreground-light dark:text-foreground-dark">Telemetry</h4>
-                        <p className="text-sm text-subtle-light dark:text-subtle-dark">Help improve the app by sharing anonymous usage data</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-3 sm:mb-4">Privacy & Data</h3>
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="flex items-center justify-between p-3 sm:p-4 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
+                      <div className="flex-1 min-w-0 pr-4">
+                        <h4 className="font-medium text-sm sm:text-base text-foreground-light dark:text-foreground-dark">Telemetry</h4>
+                        <p className="text-xs sm:text-sm text-subtle-light dark:text-subtle-dark">Help improve the app by sharing anonymous usage data</p>
                       </div>
                       <button
                         onClick={handleTelemetryToggle}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 touch-manipulation ${
                           telemetryEnabled ? 'bg-primary' : 'bg-subtle-light dark:bg-subtle-dark'
                         }`}
+                        aria-label="Toggle telemetry"
                       >
                         <span
                           className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
@@ -688,55 +700,55 @@ const Settings = () => {
 
             {/* Sessions Tab */}
             {activeTab === 'sessions' && (
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-4">Active Sessions</h3>
-                  <div className="space-y-4">
-                    <div className="p-4 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                            <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-sm">computer</span>
+                  <h3 className="text-base sm:text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-3 sm:mb-4">Active Sessions</h3>
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="p-3 sm:p-4 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-xs sm:text-sm">computer</span>
                           </div>
-                          <div>
-                            <h4 className="font-medium text-foreground-light dark:text-foreground-dark">Current Session</h4>
-                            <p className="text-sm text-subtle-light dark:text-subtle-dark">Windows 10 • Chrome • 192.168.1.100</p>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-sm sm:text-base text-foreground-light dark:text-foreground-dark">Current Session</h4>
+                            <p className="text-xs sm:text-sm text-subtle-light dark:text-subtle-dark break-words">Windows 10 • Chrome • 192.168.1.100</p>
                             <p className="text-xs text-subtle-light dark:text-subtle-dark">Last active: Now</p>
                           </div>
                         </div>
-                        <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full">Active</span>
+                        <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full whitespace-nowrap">Active</span>
                       </div>
                     </div>
 
-                    <div className="p-4 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-subtle-light/20 dark:bg-subtle-dark/20 rounded-full flex items-center justify-center">
-                            <span className="material-symbols-outlined text-subtle-light dark:text-subtle-dark text-sm">phone_android</span>
+                    <div className="p-3 sm:p-4 border border-border-light dark:border-border-dark rounded-lg bg-background-light dark:bg-background-dark">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-subtle-light/20 dark:bg-subtle-dark/20 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="material-symbols-outlined text-subtle-light dark:text-subtle-dark text-xs sm:text-sm">phone_android</span>
                           </div>
-                          <div>
-                            <h4 className="font-medium text-foreground-light dark:text-foreground-dark">Mobile Device</h4>
-                            <p className="text-sm text-subtle-light dark:text-subtle-dark">iOS 17 • Safari • 192.168.1.101</p>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-sm sm:text-base text-foreground-light dark:text-foreground-dark">Mobile Device</h4>
+                            <p className="text-xs sm:text-sm text-subtle-light dark:text-subtle-dark break-words">iOS 17 • Safari • 192.168.1.101</p>
                             <p className="text-xs text-subtle-light dark:text-subtle-dark">Last active: 2 hours ago</p>
                           </div>
                         </div>
-                        <span className="px-2 py-1 text-xs bg-subtle-light/20 dark:bg-subtle-dark/20 text-subtle-light dark:text-subtle-dark rounded-full">Inactive</span>
+                        <span className="px-2 py-1 text-xs bg-subtle-light/20 dark:bg-subtle-dark/20 text-subtle-light dark:text-subtle-dark rounded-full whitespace-nowrap">Inactive</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                    <div className="flex items-start gap-3">
-                      <span className="material-symbols-outlined text-yellow-600 dark:text-yellow-400 text-sm mt-0.5">warning</span>
-                      <div>
-                        <h4 className="font-medium text-yellow-800 dark:text-yellow-300">Sign Out All Sessions</h4>
-                        <p className="text-sm text-yellow-700 dark:text-yellow-400 mt-1">
+                  <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <span className="material-symbols-outlined text-yellow-600 dark:text-yellow-400 text-base sm:text-lg flex-shrink-0 mt-0.5">warning</span>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-sm sm:text-base text-yellow-800 dark:text-yellow-300">Sign Out All Sessions</h4>
+                        <p className="text-xs sm:text-sm text-yellow-700 dark:text-yellow-400 mt-1">
                           This will sign you out of all devices and require you to log in again.
                         </p>
                         <button
                           onClick={handleSignOutAllSessions}
                           disabled={isLoading}
-                          className="mt-3 bg-yellow-600 dark:bg-yellow-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-700 dark:hover:bg-yellow-800 transition-colors disabled:opacity-50"
+                          className="mt-3 w-full sm:w-auto bg-yellow-600 dark:bg-yellow-700 text-white px-4 py-2.5 sm:py-2 rounded-lg text-sm font-medium hover:bg-yellow-700 dark:hover:bg-yellow-800 transition-colors disabled:opacity-50 touch-manipulation"
                         >
                           {isLoading ? 'Signing out...' : 'Sign Out All Sessions'}
                         </button>

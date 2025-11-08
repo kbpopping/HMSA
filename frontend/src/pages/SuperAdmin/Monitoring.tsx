@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import AppShell from '../../components/layout/AppShell';
 import { SuperAPI } from '../../api/endpoints';
+import { useNotifications } from '../../store/notifications';
 
 /**
  * Monitoring - Outbound Queue Overview and System Health
@@ -28,21 +29,9 @@ const Monitoring = () => {
     refetchInterval: 30000,
   });
 
-  // Animation state for cards
+  const { addNotification } = useNotifications();
   const [cardAnimations, setCardAnimations] = useState<Record<string, boolean>>({});
-
-  useEffect(() => {
-    // Trigger animations on mount
-    const timer = setTimeout(() => {
-      setCardAnimations({
-        queued: true,
-        sent: true,
-        failed: true,
-        retry: true,
-      });
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
+  const notifiedIssuesRef = useRef<Set<string>>(new Set());
 
   // Default data if API is loading
   const queueOverview = queueData || {
@@ -71,6 +60,58 @@ const Monitoring = () => {
     { name: 'Workflow B', lastSuccess: '2024-01-15 10:05', lastError: '2024-01-14 15:00', avgDuration: '3s' },
     { name: 'Workflow C', lastSuccess: '2024-01-15 10:10', lastError: null, avgDuration: '1s' },
   ];
+
+  useEffect(() => {
+    // Trigger animations on mount
+    const timer = setTimeout(() => {
+      setCardAnimations({
+        queued: true,
+        sent: true,
+        failed: true,
+        retry: true,
+      });
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Monitor for system abnormalities and send notifications
+  useEffect(() => {
+    // Check for high failure rate
+    if (queueOverview.failed > 10 && !notifiedIssuesRef.current.has('high_failures')) {
+      addNotification({
+        type: 'system_abnormal',
+        title: 'High Failure Rate Detected',
+        message: `System has detected ${queueOverview.failed} failed messages. Please check the monitoring page.`,
+        route: '/super/users/monitoring',
+      });
+      notifiedIssuesRef.current.add('high_failures');
+    }
+
+    // Check for high retry rate
+    if (queueOverview.retryRate > 5 && !notifiedIssuesRef.current.has('high_retry')) {
+      addNotification({
+        type: 'system_abnormal',
+        title: 'High Retry Rate Warning',
+        message: `System retry rate is at ${queueOverview.retryRate}%. This may indicate system issues.`,
+        route: '/super/users/monitoring',
+      });
+      notifiedIssuesRef.current.add('high_retry');
+    }
+
+    // Check for workflow errors
+    workflows.forEach(workflow => {
+      const issueKey = `workflow_error_${workflow.name}`;
+      if (workflow.lastError && !notifiedIssuesRef.current.has(issueKey)) {
+        addNotification({
+          type: 'n8n_workflow_error',
+          title: 'Workflow Error Detected',
+          message: `Workflow "${workflow.name}" encountered an error. Last error: ${workflow.lastError}`,
+          route: '/super/n8n-logs',
+        });
+        notifiedIssuesRef.current.add(issueKey);
+      }
+    });
+  }, [queueOverview, workflows, addNotification]);
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {

@@ -6,6 +6,7 @@ import { SuperAPI } from '../../api/endpoints';
 import AddRoleModal from './AddRoleModal';
 import EditRoleModal from './EditRoleModal';
 import RoleDetailModal from './RoleDetailModal';
+import { useNotifications } from '../../store/notifications';
 
 export type Role = {
   id: string;
@@ -111,16 +112,37 @@ const Roles = () => {
   const endIndex = Math.min(offset + limit, filteredRoles.length);
   const totalResults = filteredRoles.length;
 
-  const handleAddSuccess = () => {
+  const { addNotification } = useNotifications();
+
+  const handleAddSuccess = (roleName?: string) => {
     setIsAddModalOpen(false);
     queryClient.invalidateQueries({ queryKey: ['super', 'roles'] });
     toast.success('Role created successfully!');
+    
+    // Add notification
+    if (roleName) {
+      addNotification({
+        type: 'role_added',
+        title: 'New Role Created',
+        message: `Role "${roleName}" has been created.`,
+        route: '/super/users-roles',
+      });
+    }
   };
 
-  const handleEditSuccess = () => {
+  const handleEditSuccess = (roleName?: string, isDelete?: boolean) => {
+    if (isDelete && roleName) {
+      // Role was deleted
+      addNotification({
+        type: 'role_deleted',
+        title: 'Role Deleted',
+        message: `Role "${roleName}" has been deleted from the system.`,
+        route: '/super/users-roles',
+      });
+    }
     setRoleToEdit(null);
     queryClient.invalidateQueries({ queryKey: ['super', 'roles'] });
-    toast.success('Role updated successfully!');
+    toast.success(isDelete ? 'Role deleted successfully!' : 'Role updated successfully!');
   };
 
   const handleEdit = (e: React.MouseEvent, role: Role) => {
@@ -136,23 +158,23 @@ const Roles = () => {
     <AppShell role="super_admin">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <header className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-4xl font-bold text-foreground-light dark:text-foreground-dark">
+        <header className="mb-4 sm:mb-6 lg:mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground-light dark:text-foreground-dark">
               Roles
             </h2>
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="bg-primary text-white px-5 py-2.5 rounded-lg font-bold flex items-center gap-2 hover:bg-primary/90 transition-colors shadow-soft"
+              className="w-full sm:w-auto bg-primary text-white px-4 sm:px-5 py-2.5 rounded-lg font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors shadow-soft text-sm sm:text-base touch-manipulation"
             >
-              <span className="material-symbols-outlined">add</span>
+              <span className="material-symbols-outlined text-lg sm:text-xl">add</span>
               Add New Role
             </button>
           </div>
 
           {/* Search Bar */}
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-subtle-light dark:text-subtle-dark">
+            <span className="material-symbols-outlined absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-subtle-light dark:text-subtle-dark text-lg sm:text-xl">
               search
             </span>
             <input
@@ -163,7 +185,7 @@ const Roles = () => {
                 setSearchQuery(e.target.value);
                 setPage(1); // Reset to first page on search
               }}
-              className="w-full pl-12 pr-4 py-3 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark placeholder-subtle-light dark:placeholder-subtle-dark focus:border-primary focus:ring-primary focus:outline-none"
+              className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 rounded-lg border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark placeholder-subtle-light dark:placeholder-subtle-dark focus:border-primary focus:ring-primary focus:outline-none text-sm sm:text-base"
             />
           </div>
         </header>
@@ -183,55 +205,56 @@ const Roles = () => {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
               {paginatedRoles.map((role) => (
                 <div
                   key={role.id}
                   onClick={() => handleCardClick(role)}
-                  className="bg-card-light dark:bg-card-dark rounded-xl shadow-soft p-6 cursor-pointer transform transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-lg hover:-translate-y-1 active:scale-[0.98] border border-transparent hover:border-primary/20"
+                  className="bg-card-light dark:bg-card-dark rounded-xl shadow-soft p-4 sm:p-6 cursor-pointer transform transition-all duration-300 ease-in-out hover:scale-[1.02] hover:shadow-lg hover:-translate-y-1 active:scale-[0.98] border border-transparent hover:border-primary/20 touch-manipulation"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-bold text-foreground-light dark:text-foreground-dark mb-1">
+                  <div className="flex justify-between items-start mb-3 sm:mb-4">
+                    <div className="flex-1 min-w-0 pr-2">
+                      <h3 className="text-base sm:text-lg font-bold text-foreground-light dark:text-foreground-dark mb-1 truncate">
                         {role.name}
                       </h3>
-                      <p className="text-sm text-subtle-light dark:text-subtle-dark">
+                      <p className="text-xs sm:text-sm text-subtle-light dark:text-subtle-dark line-clamp-2">
                         {role.description}
                       </p>
                     </div>
                     <button
                       onClick={(e) => handleEdit(e, role)}
-                      className="text-primary hover:text-primary/80 transition-colors p-2 rounded-full hover:bg-primary/10 dark:hover:bg-primary/20"
+                      className="text-primary hover:text-primary/80 transition-colors p-1.5 sm:p-2 rounded-full hover:bg-primary/10 dark:hover:bg-primary/20 flex-shrink-0 touch-manipulation"
                       title="Edit Role"
+                      aria-label="Edit Role"
                     >
-                      <span className="material-symbols-outlined">edit</span>
+                      <span className="material-symbols-outlined text-lg sm:text-xl">edit</span>
                     </button>
                   </div>
 
-                  <div className="mb-4">
-                    <h4 className="text-sm font-semibold text-foreground-light dark:text-foreground-dark mb-2">
+                  <div className="mb-3 sm:mb-4">
+                    <h4 className="text-xs sm:text-sm font-semibold text-foreground-light dark:text-foreground-dark mb-2">
                       Permissions:
                     </h4>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {role.permissions.slice(0, 3).map((permission, index) => (
                         <span
                           key={index}
-                          className="inline-block px-2 py-1 text-xs bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark rounded border border-border-light dark:border-border-dark"
+                          className="inline-block px-2 py-0.5 sm:py-1 text-xs bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark rounded border border-border-light dark:border-border-dark"
                         >
                           {permission}
                         </span>
                       ))}
                       {role.permissions.length > 3 && (
-                        <span className="inline-block px-2 py-1 text-xs text-subtle-light dark:text-subtle-dark">
+                        <span className="inline-block px-2 py-0.5 sm:py-1 text-xs text-subtle-light dark:text-subtle-dark">
                           +{role.permissions.length - 3} more
                         </span>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center text-sm text-subtle-light dark:text-subtle-dark pt-4 border-t border-border-light dark:border-border-dark">
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1 sm:gap-0 text-xs sm:text-sm text-subtle-light dark:text-subtle-dark pt-3 sm:pt-4 border-t border-border-light dark:border-border-dark">
                     <span className="font-medium">{role.userCount} users</span>
-                    <span>Created: {new Date(role.createdAt).toLocaleDateString()}</span>
+                    <span className="text-xs sm:text-sm">Created: {new Date(role.createdAt).toLocaleDateString()}</span>
                   </div>
                 </div>
               ))}
@@ -239,17 +262,18 @@ const Roles = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-subtle-light dark:text-subtle-dark">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
+                <p className="text-xs sm:text-sm text-subtle-light dark:text-subtle-dark">
                   Showing {startIndex} to {endIndex} of {totalResults} entries
                 </p>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <button
                     onClick={() => setPage(p => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="p-2 rounded-lg hover:bg-subtle-light dark:hover:bg-subtle-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-2 rounded-lg hover:bg-subtle-light dark:hover:bg-subtle-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                    aria-label="Previous page"
                   >
-                    <span className="material-symbols-outlined">chevron_left</span>
+                    <span className="material-symbols-outlined text-lg sm:text-xl">chevron_left</span>
                   </button>
                   {Array.from({ length: Math.min(totalPages, 10) }, (_, i) => {
                     let pageNum: number | string = i + 1;
@@ -277,10 +301,10 @@ const Roles = () => {
                       <button
                         key={i}
                         onClick={() => setPage(pageNum as number)}
-                        className={`px-4 py-2 rounded-lg transition-colors ${
+                        className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-lg font-medium transition-colors touch-manipulation ${
                           page === pageNum
                             ? 'bg-primary text-white'
-                            : 'hover:bg-subtle-light dark:hover:bg-subtle-dark text-foreground-light dark:text-foreground-dark'
+                            : 'text-foreground-light dark:text-foreground-dark hover:bg-subtle-light dark:hover:bg-subtle-dark'
                         }`}
                       >
                         {pageNum}
@@ -290,9 +314,10 @@ const Roles = () => {
                   <button
                     onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                     disabled={page === totalPages}
-                    className="p-2 rounded-lg hover:bg-subtle-light dark:hover:bg-subtle-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="p-2 rounded-lg hover:bg-subtle-light dark:hover:bg-subtle-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                    aria-label="Next page"
                   >
-                    <span className="material-symbols-outlined">chevron_right</span>
+                    <span className="material-symbols-outlined text-lg sm:text-xl">chevron_right</span>
                   </button>
                 </div>
               </div>

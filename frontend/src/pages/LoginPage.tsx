@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '../store/auth';
 import { toast } from 'sonner';
+import { useNotifications } from '../store/notifications';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -16,6 +17,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { login, status, user } = useAuth();
+  const { addNotification } = useNotifications();
   const [error, setError] = useState<string>('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -31,6 +33,26 @@ const LoginPage: React.FC = () => {
     try {
       const loggedInUser = await login(data.email, data.password);
       toast.success('Login successful!');
+      
+      // Simulate new login detection (in production, backend would check device/IP)
+      const lastLoginDevice = localStorage.getItem('lastLoginDevice');
+      const currentDevice = navigator.userAgent;
+      const isNewDevice = lastLoginDevice !== currentDevice;
+      
+      if (isNewDevice) {
+        // Store current device
+        localStorage.setItem('lastLoginDevice', currentDevice);
+        
+        // Add notification for new login
+        setTimeout(() => {
+          addNotification({
+            type: 'new_login',
+            title: 'New Login Detected',
+            message: `A new login was detected from ${navigator.userAgent.includes('Mobile') ? 'Mobile Device' : 'Desktop'} (${new Date().toLocaleString()}). If this wasn't you, please change your password immediately.`,
+            route: '/super/settings',
+          });
+        }, 1000);
+      }
       
       // Navigate based on role
       if (loggedInUser.role === 'super_admin') {
