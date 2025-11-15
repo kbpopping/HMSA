@@ -93,7 +93,7 @@ This addendum specifies the **technology choices**, **information architecture**
   * Templates
   * Messaging (Outbound queue & Notifications)
   * Settings (Hospital profile, Staff logins)
-  * Billings (Overview, Invoice & Payments, Payroll & Salaries Financial Reports, Account Payable, Account Receivable)
+  * Billings (Overview, Taxes, Payroll & Salaries Financial Reports, Account Payable, Account Receivable)
 
 ---
 
@@ -198,6 +198,10 @@ This addendum specifies the **technology choices**, **information architecture**
 
   *Overview (Total earnings, total revenue, accounts receivable, Revenue generated(chart), Top revenue contributors, Download reports)
   *Accounts payable (Add bill/expense, Filter by search, status, category and date range)
+  *Accounts recievable (Filter by status, date range, search)
+  *Payroll & Salaries (Sort by name, role, department)
+  *Financial Reports (Export financial reports)
+  *Taxes (Income tax, Payroll tax, Property tax)
 
 ---
 
@@ -1289,5 +1293,6 @@ SECURE_COOKIES=false
 - `POST /api/auth/login` works with curl
 - Start this frontend: `npm run dev`
 - Visit `http://localhost:5173/login`, sign in, navigate to **Hospitals** or **Patients**.
+- Visit http://localhost:7688/login`, for sign in hospital admin, navigate to **patients** or **clinicans**
 
 UI Visual designs location: https://drive.google.com/drive/folders/149TGWoHJMZ0Sj6S03rC7O4GfVMhlJXyS?usp=drive_link

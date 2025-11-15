@@ -2,98 +2,258 @@
 <html lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Super Admin Sign Up</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<title>HMSA - Hospital Admin Dashboard</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
-<style>
-        .font-inconsolata {
-            font-family: 'Inconsolata', monospace;
-        }
-    </style>
+<link href="https://fonts.googleapis.com/css2?family=Saira:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        primary: "#607AFB",
-                        "background-light": "#f5f6f8",
-                        "background-dark": "#0f1323",
-                        "text-light": "#111827",
-                        "text-dark": "#f3f4f6",
-                        "subtle-light": "#e5e7eb",
-                        "subtle-dark": "#374151"
+                        "primary": "#145D8F",
+                        "background": {
+                            "light": "#F8FAFB",
+                            "DEFAULT": "#F8FAFB",
+                            "dark": "#0D1117",
+                        },
+                        "foreground": {
+                            "light": "#0E161B",
+                            "DEFAULT": "#0E161B",
+                            "dark": "#E6EDF3",
+                        },
+                        "subtle": {
+                            "light": "#507C95",
+                            "DEFAULT": "#507C95",
+                            "dark": "#8B949E",
+                        },
+                        "border": {
+                            "light": "#D1DEE6",
+                            "DEFAULT": "#D1DEE6",
+                            "dark": "#21262D",
+                        },
+                        "surface": {
+                            "light": "#FFFFFF",
+                            "DEFAULT": "#FFFFFF",
+                            "dark": "#161B22",
+                        }
                     },
                     fontFamily: {
-                        display: "Saira",
-                        inconsolata: ['Inconsolata', 'monospace']
+                        "display": ["Saira", "sans-serif"]
                     },
                     borderRadius: {
-                        DEFAULT: "0.5rem",
-                        lg: "1rem",
-                        xl: "1.5rem",
-                        full: "9999px"
+                        "DEFAULT": "12px",
+                        "lg": "16px",
+                        "xl": "20px",
+                        "full": "9999px"
                     },
                     boxShadow: {
-                        soft: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+                        "soft": "0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05)",
                     }
-                }
-            }
+                },
+            },
         };
     </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 </head>
-<body class="font-display bg-background-light dark:bg-background-dark antialiased">
-<div class="relative min-h-screen w-full">
-<div class="absolute inset-0 z-0">
-<img alt="Two smiling doctors" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNL1ZIyHw1sBCeTAp8ny32daCTNGBdpgdNutKLM3Gj_jmkiykE7LKdje0TK0OcBc8oSmt88Npws-DgdJP4g_7oiaT-rA4IezUjhJbE9wgh-87BhWld7LHK9C7BSqdv3xAeWN7jTqO3BJM-ARFf_dfBr2jKRGjb77jBAv4pUJyX6-b4aODFBWiERdVAnV0KGLm4wjnjvEkJQf1ceX_wiPZrUKxD3eL834FI-pn1AmVavGqcwMVGPDe2tSENrz6JpKKfOB7pudatOSs"/>
-<div class="absolute inset-0 bg-black/50"></div>
+<body class="bg-background-light dark:bg-background-dark font-display text-foreground-light dark:text-foreground-dark" x-data="{ navOpen: true }">
+<div class="flex min-h-screen">
+<aside :class="navOpen ? 'w-64' : 'w-20'" class="bg-surface-light dark:bg-surface-dark flex flex-col border-r border-border-light dark:border-border-dark transition-all duration-300">
+<div class="flex items-center justify-between h-16 px-6 border-b border-border-light dark:border-border-dark">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl">local_hospital</span>
+<h1 class="text-xl font-bold text-foreground-light dark:text-foreground-dark" x-show="navOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-end="opacity-100" x-transition:enter-start="opacity-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-end="opacity-0" x-transition:leave-start="opacity-100">HMSA</h1>
 </div>
-<div class="relative z-10 flex min-h-screen items-center justify-center p-4">
-<div class="w-full max-w-md space-y-6 rounded-xl bg-background-light/90 dark:bg-background-dark/90 p-8 shadow-soft backdrop-blur-sm">
-<div class="text-center">
-<div class="mb-6 flex justify-center items-center">
-<div class="bg-primary p-2 rounded-full inline-block">
-<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<button @click="navOpen = !navOpen" class="p-1 rounded-full hover:bg-primary/10 text-subtle-light dark:text-subtle-dark hover:text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
 </div>
-<span class="ml-4 text-2xl font-bold font-inconsolata text-text-light dark:text-text-dark">HMSA</span>
+<nav class="flex-1 p-4 space-y-2">
+<a :class="navOpen ? '' : 'justify-center'" class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-primary/10 text-primary font-semibold" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="whitespace-nowrap" x-show="navOpen">Dashboard</span>
+</a>
+<a :class="navOpen ? '' : 'justify-center'" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-subtle-light dark:text-subtle-dark hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="whitespace-nowrap" x-show="navOpen">Appointments</span>
+</a>
+<a :class="navOpen ? '' : 'justify-center'" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-subtle-light dark:text-subtle-dark hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span class="whitespace-nowrap" x-show="navOpen">Staff</span>
+</a>
+<a :class="navOpen ? '' : 'justify-center'" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-subtle-light dark:text-subtle-dark hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="whitespace-nowrap" x-show="navOpen">Patients</span>
+</a>
+<a :class="navOpen ? '' : 'justify-center'" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-subtle-light dark:text-subtle-dark hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="whitespace-nowrap" x-show="navOpen">Templates</span>
+</a>
+<a :class="navOpen ? '' : 'justify-center'" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-subtle-light dark:text-subtle-dark hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="whitespace-nowrap" x-show="navOpen">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-border-light dark:border-border-dark space-y-2">
+<a :class="navOpen ? '' : 'justify-center'" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-subtle-light dark:text-subtle-dark hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="whitespace-nowrap" x-show="navOpen">Help</span>
+</a>
+<a :class="navOpen ? '' : 'justify-center'" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-subtle-light dark:text-subtle-dark hover:bg-primary/10 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person_add</span>
+<span class="whitespace-nowrap" x-show="navOpen">Invite Team</span>
+</a>
 </div>
-<h1 class="text-3xl font-bold text-text-light dark:text-text-dark">Create Super Admin Account</h1>
-<p class="mt-2 text-sm text-text-light/70 dark:text-text-dark/70">Join the hospital management system</p>
+</aside>
+<div class="flex-1 flex flex-col">
+<header class="flex items-center justify-between h-16 px-8 border-b border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark">
+<div class="flex items-center gap-3">
+<h2 class="text-lg font-bold text-foreground-light dark:text-foreground-dark">North Valley General Hospital</h2>
+<span class="px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary">PST</span>
 </div>
-<form class="space-y-4">
-<div>
-<label class="sr-only" for="email">Email</label>
-<input autocomplete="email" class="w-full rounded-lg border-subtle-light bg-background-light px-4 py-3 text-text-light placeholder-text-light/50 focus:border-primary focus:ring-primary dark:border-subtle-dark dark:bg-background-dark dark:text-text-dark dark:placeholder-text-dark/50 dark:focus:border-primary dark:focus:ring-primary" id="email" name="email" placeholder="Email Address" required="" type="email"/>
-</div>
-<div>
-<label class="sr-only" for="password">Password</label>
-<input autocomplete="new-password" class="w-full rounded-lg border-subtle-light bg-background-light px-4 py-3 text-text-light placeholder-text-light/50 focus:border-primary focus:ring-primary dark:border-subtle-dark dark:bg-background-dark dark:text-text-dark dark:placeholder-text-dark/50 dark:focus:border-primary dark:focus:ring-primary" id="password" name="password" placeholder="Password" required="" type="password"/>
-</div>
-<div>
-<label class="sr-only" for="confirm-password">Confirm Password</label>
-<input autocomplete="new-password" class="w-full rounded-lg border-subtle-light bg-background-light px-4 py-3 text-text-light placeholder-text-light/50 focus:border-primary focus:ring-primary dark:border-subtle-dark dark:bg-background-dark dark:text-text-dark dark:placeholder-text-dark/50 dark:focus:border-primary dark:focus:ring-primary" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required="" type="password"/>
-</div>
-<div>
-<button class="w-full rounded-lg bg-primary px-4 py-3 text-base font-bold text-white shadow-soft transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark" type="submit">
-                            Sign Up
-                        </button>
-</div>
-</form>
-<div class="text-center text-sm text-text-light/70 dark:text-text-dark/70">
-<p class="mb-2">
-                        Already have an account?
-                        <a class="font-medium text-primary hover:underline" href="#">
-                            Log In
-                        </a>
-</p>
-<a class="font-medium text-primary hover:underline" href="#">
-                        Privacy Policy
-                    </a>
+<div class="flex items-center gap-4">
+<button class="relative p-2 rounded-full hover:bg-primary/10 text-subtle-light dark:text-subtle-dark hover:text-primary">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500"></span>
+</button>
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDX1WFrICCeQl7zfy9pkV1T9N2VBj0BX-QOrFBadkf5O9cK9fAoW-ywyDX0DF380S5tQiG2eyBOlHg-OanD55-zVH4KOFuolv5hBXvNETcCg5h5mmi_mZemcfoAyCNnYWqtEgMH2youxzbvFB3oMRZTwysCmuJaeOKWpAs5KV1_ZRNUZwd9W2y53b3T8LqW4VuLSeYpeb1Gt6QO1aTCUIEhFklBxTsjwHjmUAA_DUeLzLI-Io-QpHgX4TuVlehObXeyFapVgsHoFiQ");'></div>
+<div class="text-sm">
+<p class="font-semibold text-foreground-light dark:text-foreground-dark">Dr. Evelyn Reed</p>
+<p class="text-subtle-light dark:text-subtle-dark">Admin</p>
 </div>
 </div>
 </div>
+</header>
+<main class="flex-1 p-8 bg-background-light dark:bg-background-dark">
+<h1 class="text-4xl font-bold text-foreground-light dark:text-foreground-dark mb-8">Dashboard</h1>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-soft flex flex-col justify-between">
+<p class="text-subtle-light dark:text-subtle-dark font-medium">Appointments today</p>
+<p class="text-4xl font-bold text-foreground-light dark:text-foreground-dark mt-2">24</p>
 </div>
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-soft flex flex-col justify-between">
+<p class="text-subtle-light dark:text-subtle-dark font-medium">Reminders sent today</p>
+<p class="text-4xl font-bold text-foreground-light dark:text-foreground-dark mt-2">150</p>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-soft flex flex-col justify-between">
+<p class="text-subtle-light dark:text-subtle-dark font-medium">No-shows this week</p>
+<p class="text-4xl font-bold text-foreground-light dark:text-foreground-dark mt-2">3</p>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-soft flex flex-col justify-between">
+<p class="text-subtle-light dark:text-subtle-dark font-medium">Opt-out rate</p>
+<p class="text-4xl font-bold text-foreground-light dark:text-foreground-dark mt-2">0.5%</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
+<div class="lg:col-span-2 bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-soft">
+<h3 class="text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-4">Appointments by Status</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-4">
+<span class="w-28 text-sm text-subtle-light dark:text-subtle-dark">Booked</span>
+<div class="w-full bg-background-light dark:bg-background-dark rounded-full h-2.5">
+<div class="bg-blue-400 h-2.5 rounded-full" style="width: 45%"></div>
+</div>
+<span class="text-sm font-semibold text-foreground-light dark:text-foreground-dark">45</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="w-28 text-sm text-subtle-light dark:text-subtle-dark">Confirmed</span>
+<div class="w-full bg-background-light dark:bg-background-dark rounded-full h-2.5">
+<div class="bg-green-400 h-2.5 rounded-full" style="width: 75%"></div>
+</div>
+<span class="text-sm font-semibold text-foreground-light dark:text-foreground-dark">75</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="w-28 text-sm text-subtle-light dark:text-subtle-dark">Cancelled</span>
+<div class="w-full bg-background-light dark:bg-background-dark rounded-full h-2.5">
+<div class="bg-yellow-400 h-2.5 rounded-full" style="width: 15%"></div>
+</div>
+<span class="text-sm font-semibold text-foreground-light dark:text-foreground-dark">15</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="w-28 text-sm text-subtle-light dark:text-subtle-dark">No-show</span>
+<div class="w-full bg-background-light dark:bg-background-dark rounded-full h-2.5">
+<div class="bg-red-400 h-2.5 rounded-full" style="width: 5%"></div>
+</div>
+<span class="text-sm font-semibold text-foreground-light dark:text-foreground-dark">5</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-3 bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-soft">
+<h3 class="text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-4">7-day Trend</h3>
+<div class="h-64">
+<svg fill="none" height="100%" preserveAspectRatio="none" viewBox="0 0 500 200" width="100%" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 200V150C35.7143 150 35.7143 50 71.4286 50C107.143 50 107.143 100 142.857 100C178.571 100 178.571 20 214.286 20C250 20 250 80 285.714 80C321.429 80 321.429 170 357.143 170C392.857 170 392.857 30 428.571 30C464.286 30 464.286 120 500 120V200H0Z" fill="url(#paint0_linear)"></path>
+<path d="M0 150C35.7143 150 35.7143 50 71.4286 50C107.143 50 107.143 100 142.857 100C178.571 100 178.571 20 214.286 20C250 20 250 80 285.714 80C321.429 80 321.429 170 357.143 170C392.857 170 392.857 30 428.571 30C464.286 30 464.286 120 500 120" stroke="#145D8F" stroke-linecap="round" stroke-width="3"></path>
+<defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="paint0_linear" x1="250" x2="250" y1="20" y2="200">
+<stop stop-color="#145D8F" stop-opacity="0.2"></stop>
+<stop offset="1" stop-color="#145D8F" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+</svg>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+<div class="xl:col-span-2 bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-soft">
+<h3 class="text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-4">Upcoming Appointments (next 2 hours)</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-border-light dark:border-border-dark">
+<th class="py-3 px-4 font-semibold text-sm text-subtle-light dark:text-subtle-dark">Patient</th>
+<th class="py-3 px-4 font-semibold text-sm text-subtle-light dark:text-subtle-dark">Clinician</th>
+<th class="py-3 px-4 font-semibold text-sm text-subtle-light dark:text-subtle-dark">Time</th>
+<th class="py-3 px-4 font-semibold text-sm text-subtle-light dark:text-subtle-dark"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-border-light dark:border-border-dark">
+<td class="py-4 px-4 text-sm font-medium text-foreground-light dark:text-foreground-dark">Sophia Carter</td>
+<td class="py-4 px-4 text-sm text-subtle-light dark:text-subtle-dark">Dr. Ethan Bennett</td>
+<td class="py-4 px-4 text-sm text-subtle-light dark:text-subtle-dark">10:00 AM</td>
+<td class="py-4 px-4 text-right"><button class="text-primary font-semibold text-sm hover:underline">View</button></td>
+</tr>
+<tr class="border-b border-border-light dark:border-border-dark">
+<td class="py-4 px-4 text-sm font-medium text-foreground-light dark:text-foreground-dark">Liam Harper</td>
+<td class="py-4 px-4 text-sm text-subtle-light dark:text-subtle-dark">Dr. Olivia Hayes</td>
+<td class="py-4 px-4 text-sm text-subtle-light dark:text-subtle-dark">10:30 AM</td>
+<td class="py-4 px-4 text-right"><button class="text-primary font-semibold text-sm hover:underline">View</button></td>
+</tr>
+<tr>
+<td class="py-4 px-4 text-sm font-medium text-foreground-light dark:text-foreground-dark">Ava Morgan</td>
+<td class="py-4 px-4 text-sm text-subtle-light dark:text-subtle-dark">Dr. Noah Clark</td>
+<td class="py-4 px-4 text-sm text-subtle-light dark:text-subtle-dark">11:00 AM</td>
+<td class="py-4 px-4 text-right"><button class="text-primary font-semibold text-sm hover:underline">View</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-6 rounded-lg shadow-soft flex flex-col">
+<h3 class="text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-4">Template Coverage</h3>
+<div class="flex-grow flex flex-col justify-center gap-4">
+<div class="flex justify-between items-baseline">
+<p class="font-medium text-subtle-light dark:text-subtle-dark">Active Templates by Channel</p>
+<p class="text-2xl font-bold text-primary">75%</p>
+</div>
+<div class="w-full bg-background-light dark:bg-background-dark rounded-full h-3">
+<div class="bg-primary h-3 rounded-full" style="width: 75%"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<script defer="" src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 </body></html>

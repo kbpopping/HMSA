@@ -218,7 +218,7 @@ BEFORE INSERT ON patients
 FOR EACH ROW
 EXECUTE FUNCTION generate_mrn();
 
--- Clinicians table
+-- Clinicians table (extended for comprehensive staff profiles)
 CREATE TABLE IF NOT EXISTS clinicians (
     id SERIAL PRIMARY KEY,
     hospital_id UUID NOT NULL REFERENCES hospitals(id),
@@ -226,7 +226,34 @@ CREATE TABLE IF NOT EXISTS clinicians (
     specialty VARCHAR(255),
     email VARCHAR(255),
     phone VARCHAR(50),
+    role VARCHAR(100), -- Staff role/category (e.g., "Clinician", "Nurse", "Support Staff", etc.)
+    -- Personal Information
+    marital_status VARCHAR(50),
+    next_of_kin_name VARCHAR(255),
+    next_of_kin_relationship VARCHAR(100),
+    home_address TEXT,
+    qualifications TEXT,
+    date_joined DATE,
+    profile_picture_url TEXT,
+    -- Employment/Financial Information
+    bank_name VARCHAR(255),
+    bank_account_number VARCHAR(100),
+    bank_routing_number VARCHAR(100),
+    base_salary VARCHAR(100), -- e.g., "$250,000 / Annum"
+    healthcare_benefits TEXT,
+    bonus_structure TEXT,
+    retirement_plan TEXT,
+    -- Medical Information
+    medical_conditions TEXT,
+    allergies TEXT,
+    emergency_contact_name VARCHAR(255),
+    emergency_contact_relationship VARCHAR(100),
+    emergency_contact_phone VARCHAR(50),
+    -- Draft save for update wizard
+    update_draft JSONB, -- Stores incomplete update data
+    draft_updated_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(hospital_id, email)
 );
 
@@ -284,6 +311,39 @@ CREATE TABLE IF NOT EXISTS notifications (
     next_retry TIMESTAMP WITH TIME ZONE,
     error_message TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Medical History table (health records)
+CREATE TABLE IF NOT EXISTS medical_history (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    hospital_id UUID NOT NULL REFERENCES hospitals(id),
+    patient_id INTEGER NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
+    record_type VARCHAR(50) NOT NULL CHECK (record_type IN ('diagnosis', 'test_result', 'procedure', 'medication', 'allergy', 'vaccination', 'note', 'other')),
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    clinician_id INTEGER REFERENCES clinicians(id),
+    record_date DATE NOT NULL,
+    metadata JSONB, -- Additional structured data (test values, medication dosages, etc.)
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Health Documents table (uploaded PDFs and other files)
+CREATE TABLE IF NOT EXISTS health_documents (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    hospital_id UUID NOT NULL REFERENCES hospitals(id),
+    patient_id INTEGER NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
+    file_name VARCHAR(255) NOT NULL,
+    file_path TEXT NOT NULL, -- Path to stored file
+    file_size INTEGER, -- Size in bytes
+    mime_type VARCHAR(100) DEFAULT 'application/pdf',
+    document_type VARCHAR(50), -- 'lab_report', 'imaging', 'prescription', 'medical_record', 'other'
+    uploaded_by UUID REFERENCES hospital_users(id),
+    ai_processed BOOLEAN DEFAULT FALSE, -- Whether AI has scanned and extracted data
+    ai_extracted_data JSONB, -- Data extracted by AI from the document
+    status VARCHAR(50) DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'processed', 'failed')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create indexes for better performance
@@ -364,6 +424,45 @@ CREATE INDEX IF NOT EXISTS idx_notifications_hospital_id ON notifications(hospit
 CREATE INDEX IF NOT EXISTS idx_notifications_appointment_id ON notifications(appointment_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_status ON notifications(status);
 
+-- Medical history indexes
+CREATE INDEX IF NOT EXISTS idx_medical_history_hospital_id ON medical_history(hospital_id);
+CREATE INDEX IF NOT EXISTS idx_medical_history_patient_id ON medical_history(patient_id);
+CREATE INDEX IF NOT EXISTS idx_medical_history_record_date ON medical_history(record_date);
+CREATE INDEX IF NOT EXISTS idx_medical_history_record_type ON medical_history(record_type);
+
+-- Health documents indexes
+CREATE INDEX IF NOT EXISTS idx_health_documents_hospital_id ON health_documents(hospital_id);
+CREATE INDEX IF NOT EXISTS idx_health_documents_patient_id ON health_documents(patient_id);
+CREATE INDEX IF NOT EXISTS idx_health_documents_status ON health_documents(status);
+CREATE INDEX IF NOT EXISTS idx_health_documents_ai_processed ON health_documents(ai_processed);
+
+-- Staff documents table (for staff profile documents)
+CREATE TABLE IF NOT EXISTS staff_documents (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    hospital_id UUID NOT NULL REFERENCES hospitals(id),
+    staff_id INTEGER NOT NULL REFERENCES clinicians(id) ON DELETE CASCADE,
+    file_name VARCHAR(255) NOT NULL,
+    file_path TEXT NOT NULL, -- Path to stored file
+    file_size INTEGER, -- Size in bytes
+    mime_type VARCHAR(100) DEFAULT 'application/pdf',
+    document_type VARCHAR(50), -- 'cv', 'license', 'certification', 'employment', 'health', 'contract', 'id', 'other'
+    description TEXT,
+    uploaded_by UUID REFERENCES hospital_users(id),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Staff documents indexes
+CREATE INDEX IF NOT EXISTS idx_staff_documents_hospital_id ON staff_documents(hospital_id);
+CREATE INDEX IF NOT EXISTS idx_staff_documents_staff_id ON staff_documents(staff_id);
+CREATE INDEX IF NOT EXISTS idx_staff_documents_document_type ON staff_documents(document_type);
+
+-- Trigger to auto-update updated_at for staff documents
+CREATE TRIGGER update_staff_documents_updated_at
+    BEFORE UPDATE ON staff_documents
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
 -- Functions and Triggers
 
 -- Function to update updated_at timestamp
@@ -411,6 +510,23 @@ CREATE TRIGGER update_user_last_active
     FOR EACH ROW
     WHEN (OLD.last_active IS DISTINCT FROM NEW.last_active)
     EXECUTE FUNCTION update_last_active();
+
+-- Triggers to auto-update updated_at for health records
+CREATE TRIGGER update_medical_history_updated_at
+    BEFORE UPDATE ON medical_history
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_health_documents_updated_at
+    BEFORE UPDATE ON health_documents
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger to auto-update updated_at for clinicians
+CREATE TRIGGER update_clinicians_updated_at
+    BEFORE UPDATE ON clinicians
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
 
 -- Function to clean up expired sessions
 CREATE OR REPLACE FUNCTION cleanup_expired_sessions()

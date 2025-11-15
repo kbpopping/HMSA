@@ -9,6 +9,9 @@ const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
 const { randomUUID } = require('crypto');
 const path = require('path');
+const multer = require('multer');
+const fs = require('fs').promises;
+const PDFDocument = require('pdfkit');
 
 const app = express();
 
@@ -76,6 +79,34 @@ app.use(
 
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Configure multer for file uploads
+const uploadsDir = path.join(__dirname, 'uploads', 'health-documents');
+// Ensure uploads directory exists
+fs.mkdir(uploadsDir, { recursive: true }).catch(console.error);
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, `patient-${req.params.patientId}-${uniqueSuffix}-${file.originalname}`);
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (req, file, cb) => {
+    // Only allow PDF files
+    if (file.mimetype === 'application/pdf') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PDF files are allowed'), false);
+    }
+  }
+});
 
 // ====== JWT HELPERS ======
 function signAccess(payload) {
@@ -515,10 +546,259 @@ app.post('/api/hospitals/:id/contact-preferences', auth, requireRole('hospital_a
   }
 });
 
+// ====== Health Records ======
+
+// GET /api/hospitals/:id/patients/:patientId/health-records
+app.get('/api/hospitals/:id/patients/:patientId/health-records', auth, requireRole('hospital_admin', 'super_admin'), ensureHospitalScope, async (req, res) => {
+  try {
+    const { id: hospitalId, patientId } = req.params;
+    const { rows: history } = await pool.query(
+      `SELECT mh.*, c.name as clinician_name
+       FROM medical_history mh
+       LEFT JOIN clinicians c ON mh.clinician_id = c.id
+       WHERE mh.hospital_id = $1 AND mh.patient_id = $2
+       ORDER BY mh.record_date DESC, mh.created_at DESC`,
+      [hospitalId, patientId]
+    );
+    const { rows: documents } = await pool.query(
+      `SELECT id, file_name, file_size, mime_type, document_type, ai_processed, status, created_at
+       FROM health_documents
+       WHERE hospital_id = $1 AND patient_id = $2
+       ORDER BY created_at DESC`,
+      [hospitalId, patientId]
+    );
+    res.json({ medicalHistory: history, documents });
+  } catch (e) {
+    console.error('HEALTH RECORDS GET ERROR:', e);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// POST /api/hospitals/:id/patients/:patientId/health-records/upload
+app.post('/api/hospitals/:id/patients/:patientId/health-records/upload', 
+  auth, 
+  requireRole('hospital_admin', 'super_admin'), 
+  ensureHospitalScope,
+  upload.single('document'),
+  async (req, res) => {
+    try {
+      const { id: hospitalId, patientId } = req.params;
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
+
+      // Verify patient exists and belongs to hospital
+      const { rowCount } = await pool.query(
+        'SELECT 1 FROM patients WHERE id = $1 AND hospital_id = $2',
+        [patientId, hospitalId]
+      );
+      if (!rowCount) {
+        // Clean up uploaded file
+        await fs.unlink(req.file.path).catch(console.error);
+        return res.status(404).json({ error: 'Patient not found' });
+      }
+
+      const { rows } = await pool.query(
+        `INSERT INTO health_documents 
+         (hospital_id, patient_id, file_name, file_path, file_size, mime_type, document_type, uploaded_by, status)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'pending')
+         RETURNING id, file_name, file_size, mime_type, document_type, status, created_at`,
+        [
+          hospitalId,
+          patientId,
+          req.file.originalname,
+          req.file.path,
+          req.file.size,
+          req.file.mimetype,
+          req.body.document_type || 'medical_record',
+          req.user.sub
+        ]
+      );
+
+      // TODO: Queue AI processing job here
+      // For now, we'll mark it as ready for processing
+      res.status(201).json({ 
+        ok: true, 
+        document: rows[0],
+        message: 'Document uploaded successfully. AI processing will begin shortly.'
+      });
+    } catch (e) {
+      console.error('HEALTH RECORD UPLOAD ERROR:', e);
+      if (req.file) {
+        await fs.unlink(req.file.path).catch(console.error);
+      }
+      res.status(500).json({ error: e.message || 'Server error' });
+    }
+  }
+);
+
+// GET /api/hospitals/:id/patients/:patientId/health-records/download
+app.get('/api/hospitals/:id/patients/:patientId/health-records/download', 
+  auth, 
+  requireRole('hospital_admin', 'super_admin'), 
+  ensureHospitalScope,
+  async (req, res) => {
+    try {
+      const { id: hospitalId, patientId } = req.params;
+
+      // Get patient info
+      const { rows: patientRows } = await pool.query(
+        `SELECT p.*, h.name as hospital_name
+         FROM patients p
+         JOIN hospitals h ON p.hospital_id = h.id
+         WHERE p.id = $1 AND p.hospital_id = $2`,
+        [patientId, hospitalId]
+      );
+      if (!patientRows.length) {
+        return res.status(404).json({ error: 'Patient not found' });
+      }
+      const patient = patientRows[0];
+
+      // Get medical history
+      const { rows: history } = await pool.query(
+        `SELECT mh.*, c.name as clinician_name
+         FROM medical_history mh
+         LEFT JOIN clinicians c ON mh.clinician_id = c.id
+         WHERE mh.hospital_id = $1 AND mh.patient_id = $2
+         ORDER BY mh.record_date DESC, mh.created_at DESC`,
+        [hospitalId, patientId]
+      );
+
+      // Get appointments
+      const { rows: appointments } = await pool.query(
+        `SELECT a.*, c.name as clinician_name
+         FROM appointments a
+         LEFT JOIN clinicians c ON a.clinician_id = c.id
+         WHERE a.hospital_id = $1 AND a.patient_id = $2
+         ORDER BY a.start_time DESC
+         LIMIT 50`,
+        [hospitalId, patientId]
+      );
+
+      // Get uploaded documents summary
+      const { rows: documents } = await pool.query(
+        `SELECT file_name, document_type, created_at, ai_processed
+         FROM health_documents
+         WHERE hospital_id = $1 AND patient_id = $2
+         ORDER BY created_at DESC`,
+        [hospitalId, patientId]
+      );
+
+      // Generate PDF
+      const doc = new PDFDocument({ margin: 50 });
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="health-report-${patient.mrn}-${Date.now()}.pdf"`);
+      doc.pipe(res);
+
+      // Header
+      doc.fontSize(20).text('Comprehensive Health Report', { align: 'center' });
+      doc.moveDown();
+      doc.fontSize(12).text(`Generated: ${new Date().toLocaleString()}`, { align: 'center' });
+      doc.moveDown(2);
+
+      // Patient Information
+      doc.fontSize(16).text('Patient Information', { underline: true });
+      doc.moveDown(0.5);
+      doc.fontSize(11);
+      doc.text(`Name: ${patient.first_name} ${patient.last_name}`);
+      doc.text(`MRN: ${patient.mrn}`);
+      if (patient.date_of_birth) {
+        const dob = new Date(patient.date_of_birth);
+        const age = Math.floor((new Date() - dob) / (365.25 * 24 * 60 * 60 * 1000));
+        doc.text(`Date of Birth: ${dob.toLocaleDateString()} (Age: ${age})`);
+      }
+      if (patient.email) doc.text(`Email: ${patient.email}`);
+      if (patient.phone) doc.text(`Phone: ${patient.phone}`);
+      doc.text(`Hospital: ${patient.hospital_name}`);
+      doc.moveDown();
+
+      // Medical History
+      if (history.length > 0) {
+        doc.fontSize(16).text('Medical History', { underline: true });
+        doc.moveDown(0.5);
+        doc.fontSize(11);
+        history.forEach((record, idx) => {
+          doc.text(`${idx + 1}. ${record.title}`, { continued: false });
+          doc.text(`   Date: ${new Date(record.record_date).toLocaleDateString()}`, { indent: 20 });
+          if (record.clinician_name) {
+            doc.text(`   Clinician: ${record.clinician_name}`, { indent: 20 });
+          }
+          if (record.description) {
+            doc.text(`   Details: ${record.description}`, { indent: 20 });
+          }
+          if (record.metadata) {
+            try {
+              const meta = typeof record.metadata === 'string' ? JSON.parse(record.metadata) : record.metadata;
+              if (Object.keys(meta).length > 0) {
+                doc.text(`   Additional Info: ${JSON.stringify(meta, null, 2)}`, { indent: 20 });
+              }
+            } catch (e) {
+              // Ignore metadata parsing errors
+            }
+          }
+          doc.moveDown(0.3);
+        });
+        doc.moveDown();
+      }
+
+      // Appointments Summary
+      if (appointments.length > 0) {
+        doc.fontSize(16).text('Recent Appointments', { underline: true });
+        doc.moveDown(0.5);
+        doc.fontSize(11);
+        appointments.slice(0, 20).forEach((apt, idx) => {
+          const aptDate = new Date(apt.start_time);
+          doc.text(`${idx + 1}. ${aptDate.toLocaleDateString()} - ${apt.status}`, { continued: false });
+          if (apt.clinician_name) {
+            doc.text(`   Clinician: ${apt.clinician_name}`, { indent: 20 });
+          }
+          if (apt.reason) {
+            doc.text(`   Reason: ${apt.reason}`, { indent: 20 });
+          }
+          doc.moveDown(0.3);
+        });
+        doc.moveDown();
+      }
+
+      // Uploaded Documents Summary
+      if (documents.length > 0) {
+        doc.fontSize(16).text('Uploaded Documents', { underline: true });
+        doc.moveDown(0.5);
+        doc.fontSize(11);
+        documents.forEach((doc, idx) => {
+          doc.text(`${idx + 1}. ${doc.file_name}`, { continued: false });
+          doc.text(`   Type: ${doc.document_type || 'N/A'}`, { indent: 20 });
+          doc.text(`   Uploaded: ${new Date(doc.created_at).toLocaleDateString()}`, { indent: 20 });
+          doc.text(`   AI Processed: ${doc.ai_processed ? 'Yes' : 'No'}`, { indent: 20 });
+          doc.moveDown(0.3);
+        });
+      }
+
+      // Footer
+      doc.moveDown(2);
+      doc.fontSize(10).text('This is a comprehensive health report generated from the HMSA system.', { align: 'center' });
+      doc.text('For questions or concerns, please contact your healthcare provider.', { align: 'center' });
+
+      doc.end();
+    } catch (e) {
+      console.error('HEALTH REPORT DOWNLOAD ERROR:', e);
+      if (!res.headersSent) {
+        res.status(500).json({ error: 'Server error' });
+      }
+    }
+  }
+);
+
 // ====== ERROR HANDLER ======
 app.use((err, req, res, next) => {
   console.error('UNCAUGHT ERROR:', err);
-  res.status(500).json({ error: 'Server error' });
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ error: 'File too large. Maximum size is 10MB.' });
+    }
+    return res.status(400).json({ error: err.message });
+  }
+  res.status(500).json({ error: err.message || 'Server error' });
 });
 
 // ====== BOOTSTRAP: DB ping, seed, then start ======
