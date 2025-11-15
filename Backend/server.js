@@ -765,11 +765,11 @@ app.get('/api/hospitals/:id/patients/:patientId/health-records/download',
         doc.fontSize(16).text('Uploaded Documents', { underline: true });
         doc.moveDown(0.5);
         doc.fontSize(11);
-        documents.forEach((doc, idx) => {
-          doc.text(`${idx + 1}. ${doc.file_name}`, { continued: false });
-          doc.text(`   Type: ${doc.document_type || 'N/A'}`, { indent: 20 });
-          doc.text(`   Uploaded: ${new Date(doc.created_at).toLocaleDateString()}`, { indent: 20 });
-          doc.text(`   AI Processed: ${doc.ai_processed ? 'Yes' : 'No'}`, { indent: 20 });
+        documents.forEach((docItem, idx) => {
+          doc.text(`${idx + 1}. ${docItem.file_name}`, { continued: false });
+          doc.text(`   Type: ${docItem.document_type || 'N/A'}`, { indent: 20 });
+          doc.text(`   Uploaded: ${new Date(docItem.created_at).toLocaleDateString()}`, { indent: 20 });
+          doc.text(`   AI Processed: ${docItem.ai_processed ? 'Yes' : 'No'}`, { indent: 20 });
           doc.moveDown(0.3);
         });
       }

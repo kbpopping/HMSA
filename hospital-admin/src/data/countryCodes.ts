@@ -70,7 +70,6 @@ export const countryCodes: CountryCode[] = [
   { code: 'LU', name: 'Luxembourg', dialCode: '+352', flag: '🇱🇺' },
   { code: 'MT', name: 'Malta', dialCode: '+356', flag: '🇲🇹' },
   { code: 'CY', name: 'Cyprus', dialCode: '+357', flag: '🇨🇾' },
-  { code: 'IE', name: 'Ireland', dialCode: '+353', flag: '🇮🇪' },
   { code: 'PK', name: 'Pakistan', dialCode: '+92', flag: '🇵🇰' },
   { code: 'BD', name: 'Bangladesh', dialCode: '+880', flag: '🇧🇩' },
   { code: 'LK', name: 'Sri Lanka', dialCode: '+94', flag: '🇱🇰' },
