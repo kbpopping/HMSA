@@ -80,12 +80,55 @@ export type EarningsSummary = {
   chart: Array<{ date: string; amount: number }>;
 };
 
+export type ScheduleType = 
+  | 'appointment' 
+  | 'surgery' 
+  | 'task' 
+  | 'administrative' 
+  | 'meeting' 
+  | 'training' 
+  | 'consultation' 
+  | 'on-call' 
+  | 'break' 
+  | 'other';
+
+export type ScheduleStatus = 
+  | 'pending' 
+  | 'approved' 
+  | 'rejected' 
+  | 'accepted' 
+  | 'completed' 
+  | 'cancelled';
+
+export type ScheduleItem = {
+  id: number;
+  title: string;
+  description?: string;
+  type: ScheduleType;
+  status: ScheduleStatus;
+  date: string;
+  startTime: string;
+  endTime: string;
+  location?: string;
+  assignedBy?: string; // Hospital admin who assigned it
+  assignedById?: number;
+  patientId?: number;
+  patientName?: string;
+  room?: string;
+  priority?: 'low' | 'medium' | 'high' | 'urgent';
+  notes?: string;
+  created_at: string;
+  updated_at?: string;
+  requiresApproval?: boolean; // If assigned by admin, needs approval
+};
+
 export type ScheduleSlot = {
   id: string;
   date: string;
   startTime: string;
   endTime: string;
   appointment?: Appointment;
+  schedule?: ScheduleItem;
   type: 'appointment' | 'available' | 'break' | 'unavailable';
 };
 
@@ -200,6 +243,18 @@ export const ClinicianAPI = {
     return apiFetch<Appointment[]>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/appointments${query ? `?${query}` : ''}`);
   },
   
+  createAppointment: (hospitalId: string, data: {
+    patient_id: number;
+    appointment_date: string;
+    appointment_time: string;
+    reason?: string;
+    room?: string;
+  }) =>
+    apiFetch<Appointment>(`/api/hospitals/${hospitalId}/appointments`, {
+      method: 'POST',
+      json: data,
+    }),
+  
   updateAppointmentStatus: (hospitalId: string, appointmentId: string, status: string) =>
     apiFetch<Appointment>(`/api/hospitals/${hospitalId}/appointments/${appointmentId}`, {
       method: 'PATCH',
@@ -216,12 +271,64 @@ export const ClinicianAPI = {
   },
   
   // Schedule
-  getSchedule: (hospitalId: string, clinicianId: string, week?: string) => {
+  getSchedule: (hospitalId: string, clinicianId: string, filters?: { 
+    start?: string | null; 
+    end?: string | null; 
+    type?: string | null;
+    status?: string | null;
+  }) => {
     const params = new URLSearchParams();
-    if (week) params.set('week', week);
+    if (filters?.start) params.set('start', filters.start);
+    if (filters?.end) params.set('end', filters.end);
+    if (filters?.type) params.set('type', filters.type);
+    if (filters?.status) params.set('status', filters.status);
     const query = params.toString();
-    return apiFetch<WeeklySchedule>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/schedule${query ? `?${query}` : ''}`);
+    return apiFetch<ScheduleItem[]>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/schedule${query ? `?${query}` : ''}`);
   },
+  
+  createSchedule: (hospitalId: string, clinicianId: string, data: {
+    title: string;
+    description?: string;
+    type: ScheduleType;
+    date: string;
+    startTime: string;
+    endTime: string;
+    location?: string;
+    room?: string;
+    priority?: 'low' | 'medium' | 'high' | 'urgent';
+    notes?: string;
+  }) =>
+    apiFetch<ScheduleItem>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/schedule`, {
+      method: 'POST',
+      json: data,
+    }),
+  
+  updateSchedule: (hospitalId: string, clinicianId: string, scheduleId: string, data: Partial<ScheduleItem>) =>
+    apiFetch<ScheduleItem>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/schedule/${scheduleId}`, {
+      method: 'PATCH',
+      json: data,
+    }),
+  
+  approveSchedule: (hospitalId: string, clinicianId: string, scheduleId: string) =>
+    apiFetch<ScheduleItem>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/schedule/${scheduleId}/approve`, {
+      method: 'POST',
+    }),
+  
+  rejectSchedule: (hospitalId: string, clinicianId: string, scheduleId: string, reason?: string) =>
+    apiFetch<ScheduleItem>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/schedule/${scheduleId}/reject`, {
+      method: 'POST',
+      json: { reason },
+    }),
+  
+  acceptSchedule: (hospitalId: string, clinicianId: string, scheduleId: string) =>
+    apiFetch<ScheduleItem>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/schedule/${scheduleId}/accept`, {
+      method: 'POST',
+    }),
+  
+  completeSchedule: (hospitalId: string, clinicianId: string, scheduleId: string) =>
+    apiFetch<ScheduleItem>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/schedule/${scheduleId}/complete`, {
+      method: 'POST',
+    }),
   
   // Availability
   updateAvailability: (hospitalId: string, clinicianId: string, availability: AvailabilityPreferences) =>
@@ -236,15 +343,100 @@ export const ClinicianAPI = {
       method: 'POST',
     }),
   
-  // Patients (permission-based)
-  getPatients: (hospitalId: string, filters?: { search?: string | null }) => {
+  // Patients (permission-based) - Only assigned patients
+  getAssignedPatients: (hospitalId: string, clinicianId: string, filters?: { search?: string | null }) => {
     const params = new URLSearchParams();
     if (filters?.search) params.set('search', filters.search);
     const query = params.toString();
-    return apiFetch<Patient[]>(`/api/hospitals/${hospitalId}/patients${query ? `?${query}` : ''}`);
+    return apiFetch<Patient[]>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/patients${query ? `?${query}` : ''}`);
   },
-  
-  getPatientHealthRecords: (hospitalId: string, patientId: string) =>
-    apiFetch<PatientHealthRecords>(`/api/hospitals/${hospitalId}/patients/${patientId}/health-records`),
+
+  searchPatient: (hospitalId: string, clinicianId: string, query: string) =>
+    apiFetch<Patient | null>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/patients/search?q=${encodeURIComponent(query)}`),
+
+  getPatient: (hospitalId: string, clinicianId: string, patientId: string) =>
+    apiFetch<Patient & { 
+      contact_preferences?: any; 
+      notes?: string;
+      gender?: string;
+      street_address?: string;
+      city?: string;
+      state?: string;
+      zip_code?: string;
+      blood_type?: string;
+      next_of_kin?: {
+        name?: string;
+        relationship?: string;
+        contact_number?: string;
+      };
+      assigned_clinician_id?: number;
+    }>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/patients/${patientId}`),
+
+  getPatientAppointments: (hospitalId: string, clinicianId: string, patientId: string) =>
+    apiFetch<Appointment[]>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/patients/${patientId}/appointments`),
+
+  // Health Records
+  getHealthRecords: (hospitalId: string, clinicianId: string, patientId: string) =>
+    apiFetch<{
+      medicalHistory: Array<{
+        id: string;
+        record_type: string;
+        title: string;
+        description?: string;
+        clinician_name?: string;
+        record_date: string;
+        metadata?: any;
+        created_at: string;
+      }>;
+      documents: Array<{
+        id: string;
+        file_name: string;
+        file_size: number;
+        mime_type: string;
+        document_type?: string;
+        ai_processed: boolean;
+        status: string;
+        created_at: string;
+      }>;
+    }>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}/patients/${patientId}/health-records`),
+
+  uploadHealthDocument: (hospitalId: string, clinicianId: string, patientId: string, file: File, documentType?: string) => {
+    const formData = new FormData();
+    formData.append('document', file);
+    if (documentType) {
+      formData.append('document_type', documentType);
+    }
+    return apiFetch<{ ok: true; document: any; message: string }>(
+      `/api/hospitals/${hospitalId}/clinicians/${clinicianId}/patients/${patientId}/health-records/upload`,
+      {
+        method: 'POST',
+        body: formData,
+        headers: {},
+      }
+    );
+  },
+
+  addMedicalHistory: (hospitalId: string, clinicianId: string, patientId: string, data: {
+    title: string;
+    description?: string;
+    record_type?: string;
+    record_date?: string;
+  }) =>
+    apiFetch<{ ok: true; record: any }>(
+      `/api/hospitals/${hospitalId}/clinicians/${clinicianId}/patients/${patientId}/health-records/history`,
+      {
+        method: 'POST',
+        json: data,
+      }
+    ),
+
+  updatePatientNotes: (hospitalId: string, clinicianId: string, patientId: string, notes: string) =>
+    apiFetch<{ ok: true }>(
+      `/api/hospitals/${hospitalId}/clinicians/${clinicianId}/patients/${patientId}/notes`,
+      {
+        method: 'PATCH',
+        json: { notes },
+      }
+    ),
 };
 

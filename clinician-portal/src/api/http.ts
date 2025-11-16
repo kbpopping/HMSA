@@ -101,6 +101,13 @@ async function routeMockAPI<T>(
     }
   }
   
+  // Create Appointment
+  if (path.startsWith('/api/hospitals/') && path.endsWith('/appointments') && method === 'POST') {
+    const parts = path.split('/');
+    const hospitalId = parts[3];
+    return MockAPI.clinician.createAppointment(hospitalId, json) as T;
+  }
+  
   // Clinician Appointments
   if (path.startsWith('/api/hospitals/') && path.includes('/clinicians/') && path.includes('/appointments')) {
     const parts = path.split('/');
@@ -146,10 +153,43 @@ async function routeMockAPI<T>(
     const hospitalId = parts[3];
     const clinicianId = parts[5];
     
+    // Schedule actions (approve, reject, accept, complete)
+    if (path.endsWith('/approve') && method === 'POST') {
+      const scheduleId = parts[7];
+      return MockAPI.clinician.approveSchedule(hospitalId, clinicianId, scheduleId) as T;
+    }
+    if (path.endsWith('/reject') && method === 'POST') {
+      const scheduleId = parts[7];
+      return MockAPI.clinician.rejectSchedule(hospitalId, clinicianId, scheduleId, json.reason) as T;
+    }
+    if (path.endsWith('/accept') && method === 'POST') {
+      const scheduleId = parts[7];
+      return MockAPI.clinician.acceptSchedule(hospitalId, clinicianId, scheduleId) as T;
+    }
+    if (path.endsWith('/complete') && method === 'POST') {
+      const scheduleId = parts[7];
+      return MockAPI.clinician.completeSchedule(hospitalId, clinicianId, scheduleId) as T;
+    }
+    
+    // Update schedule
+    if (path.split('/').length === 8 && (method === 'PATCH' || method === 'PUT')) {
+      const scheduleId = parts[7];
+      return MockAPI.clinician.updateSchedule(hospitalId, clinicianId, scheduleId, json) as T;
+    }
+    
+    // Create schedule
+    if (path.endsWith('/schedule') && method === 'POST') {
+      return MockAPI.clinician.createSchedule(hospitalId, clinicianId, json) as T;
+    }
+    
+    // Get schedules
     if (method === 'GET') {
       const url = new URL(path, 'http://localhost');
-      const week = url.searchParams.get('week');
-      return MockAPI.clinician.getSchedule(hospitalId, clinicianId, week || undefined) as T;
+      const start = url.searchParams.get('start');
+      const end = url.searchParams.get('end');
+      const type = url.searchParams.get('type');
+      const status = url.searchParams.get('status');
+      return MockAPI.clinician.getSchedule(hospitalId, clinicianId, { start, end, type, status }) as T;
     }
   }
   
@@ -175,24 +215,77 @@ async function routeMockAPI<T>(
     }
   }
   
-  // Patients list (permission-based)
-  if (path.startsWith('/api/hospitals/') && path.endsWith('/patients')) {
-    const hospitalId = path.split('/')[3];
-    if (method === 'GET') {
-      const url = new URL(path, 'http://localhost');
-      const search = url.searchParams.get('search');
-      return MockAPI.clinician.getPatients(hospitalId, { search }) as T;
-    }
-  }
-  
-  // Patient Health Records (permission-based)
-  if (path.startsWith('/api/hospitals/') && path.includes('/patients/') && path.includes('/health-records')) {
+  // Clinician Patients - Only assigned patients
+  if (path.startsWith('/api/hospitals/') && path.includes('/clinicians/') && path.includes('/patients')) {
     const parts = path.split('/');
     const hospitalId = parts[3];
-    const patientId = parts[5];
+    const clinicianId = parts[5];
     
-    if (path.endsWith('/health-records') && method === 'GET') {
-      return MockAPI.clinician.getPatientHealthRecords(hospitalId, patientId) as T;
+    // Remove query parameters for path matching
+    const pathWithoutQuery = path.split('?')[0];
+    
+    // Search patient
+    if (pathWithoutQuery.includes('/patients/search') && method === 'GET') {
+      const url = new URL(path, 'http://localhost');
+      const query = url.searchParams.get('q');
+      return MockAPI.clinician.searchPatient(hospitalId, clinicianId, query || '') as T;
+    }
+    
+    // Get single patient (path: /api/hospitals/{id}/clinicians/{id}/patients/{id})
+    if (pathWithoutQuery.split('/').length === 8 && method === 'GET' && !pathWithoutQuery.includes('/search')) {
+      const patientId = parts[7];
+      return MockAPI.clinician.getPatient(hospitalId, clinicianId, patientId) as T;
+    }
+    
+    // Get patient appointments
+    if (pathWithoutQuery.endsWith('/appointments') && method === 'GET') {
+      const patientId = parts[7];
+      return MockAPI.clinician.getPatientAppointments(hospitalId, clinicianId, patientId) as T;
+    }
+    
+    // Health Records
+    if (pathWithoutQuery.includes('/health-records')) {
+      const patientId = parts[7];
+      
+      // Upload document
+      if (pathWithoutQuery.endsWith('/upload') && method === 'POST') {
+        const file = (opts.body as FormData)?.get('document') as File;
+        const documentType = (opts.body as FormData)?.get('document_type') as string;
+        return MockAPI.clinician.uploadHealthDocument(hospitalId, clinicianId, patientId, file, documentType) as T;
+      }
+      
+      // Add medical history
+      if (pathWithoutQuery.endsWith('/history') && method === 'POST') {
+        return MockAPI.clinician.addMedicalHistory(hospitalId, clinicianId, patientId, json) as T;
+      }
+      
+      // Get health records
+      if (pathWithoutQuery.endsWith('/health-records') && method === 'GET') {
+        return MockAPI.clinician.getHealthRecords(hospitalId, clinicianId, patientId) as T;
+      }
+    }
+    
+    // Update patient notes
+    if (pathWithoutQuery.endsWith('/notes') && method === 'PATCH') {
+      const patientId = parts[7];
+      return MockAPI.clinician.updatePatientNotes(hospitalId, clinicianId, patientId, json.notes) as T;
+    }
+    
+    // Get assigned patients list (path: /api/hospitals/{id}/clinicians/{id}/patients)
+    // This should match when path ends with /patients (without query params)
+    // Check if this is the patients list endpoint (not a specific patient or sub-resource)
+    const isPatientsList = pathWithoutQuery.endsWith('/patients') && 
+                          method === 'GET' && 
+                          parts.length === 7 &&
+                          !pathWithoutQuery.includes('/patients/');
+    
+    if (isPatientsList) {
+      const url = new URL(path, 'http://localhost');
+      const search = url.searchParams.get('search');
+      console.log('[Mock API] Getting assigned patients:', { hospitalId, clinicianId, search });
+      const result = await MockAPI.clinician.getAssignedPatients(hospitalId, clinicianId, { search: search || null });
+      console.log('[Mock API] Returning patients:', result);
+      return result as T;
     }
   }
   

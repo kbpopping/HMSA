@@ -4,6 +4,10 @@ import LoginPage from './pages/auth/LoginPage';
 import ChangePasswordPage from './pages/auth/ChangePasswordPage';
 import OnboardingPage from './pages/onboarding/OnboardingPage';
 import Dashboard from './pages/Dashboard';
+import Appointments from './pages/Appointments';
+import Schedule from './pages/Schedule';
+import Patients from './pages/Patients';
+import PatientProfile from './pages/PatientProfile';
 import ProtectedRoute from './routes/ProtectedRoute';
 import FirstLoginRoute from './routes/FirstLoginRoute';
 
@@ -25,10 +29,10 @@ function App() {
           {/* Routes that require password change and onboarding to be complete */}
           <Route element={<FirstLoginRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/appointments" element={<div className="p-6"><h1 className="text-2xl">Appointments - Coming Soon</h1></div>} />
-            <Route path="/schedule" element={<div className="p-6"><h1 className="text-2xl">Schedule - Coming Soon</h1></div>} />
-            <Route path="/patients" element={<div className="p-6"><h1 className="text-2xl">Patients - Coming Soon</h1></div>} />
-            <Route path="/patients/:patientId" element={<div className="p-6"><h1 className="text-2xl">Patient Profile - Coming Soon</h1></div>} />
+            <Route path="/appointments" element={<Appointments />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/patients" element={<Patients />} />
+            <Route path="/patients/:patientId" element={<PatientProfile />} />
             <Route path="/earnings" element={<div className="p-6"><h1 className="text-2xl">Earnings - Coming Soon</h1></div>} />
             <Route path="/availability" element={<div className="p-6"><h1 className="text-2xl">Availability - Coming Soon</h1></div>} />
             <Route path="/settings" element={<div className="p-6"><h1 className="text-2xl">Settings - Coming Soon</h1></div>} />
