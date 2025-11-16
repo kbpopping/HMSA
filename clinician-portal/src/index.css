@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    font-family: 'Saira', sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    @apply bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark;
+  }
+
+  /* Remove leftover demo styles for buttons */
+  button:hover { 
+    border-color: transparent; 
+  }
+  
+  button:focus,
+  button:focus-visible { 
+    outline: none; 
+  }
+}
+
+/* Helper class for HMSA branding font */
+.font-inconsolata {
+  font-family: 'Inconsolata', monospace;
+}
+
+/* Touch manipulation for better mobile interaction */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+

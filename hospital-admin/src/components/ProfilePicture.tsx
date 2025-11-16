@@ -22,9 +22,7 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({
 
   // Update imageSrc when src prop changes
   useEffect(() => {
-    if (src) {
-      setImageSrc(src);
-    }
+    setImageSrc(src);
   }, [src]);
 
   const sizeClasses = {

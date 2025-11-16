@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { ColumnDef } from '@tanstack/react-table';
 import clsx from 'clsx';
@@ -35,9 +36,18 @@ type CustomVariable = {
  */
 const Templates = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const hospitalId = user?.hospital_id || '1';
   const { hospitalName } = useHospital();
+
+  // Check if we're in invite flow
+  const isInviteFlow = searchParams.get('invite') === 'true';
+  const inviteStaffId = searchParams.get('staffId') || '';
+  const inviteStaffName = searchParams.get('staffName') || '';
+  const inviteStaffEmail = searchParams.get('staffEmail') || '';
+  const invitePassword = searchParams.get('password') || '';
 
   // State
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -57,6 +67,7 @@ const Templates = () => {
     template: null,
     password: '',
   });
+  const [selectedInviteTemplate, setSelectedInviteTemplate] = useState<string>('');
   const bodyTextareaRef = useRef<HTMLTextAreaElement>(null);
   const subjectInputRef = useRef<HTMLInputElement>(null);
 
@@ -163,6 +174,35 @@ const Templates = () => {
       toast.error(error.message || 'Failed to update template status');
     },
   });
+
+  // Send invite mutation
+  const sendInviteMutation = useMutation({
+    mutationFn: (templateId: string) => {
+      if (!inviteStaffId) throw new Error('Staff ID is required');
+      return HospitalAPI.sendStaffInvite(hospitalId, inviteStaffId, {
+        templateId,
+        password: invitePassword,
+      });
+    },
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({ queryKey: ['hospital', 'clinicians'], exact: false });
+      toast.success(data.message || 'Invite sent successfully');
+      // Navigate back to previous page (staff profile)
+      navigate(-1);
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to send invite');
+    },
+  });
+
+  // Handle send invite
+  const handleSendInvite = () => {
+    if (!selectedInviteTemplate) {
+      toast.error('Please select a template');
+      return;
+    }
+    sendInviteMutation.mutate(selectedInviteTemplate);
+  };
 
   // Reset form
   const resetForm = () => {
@@ -464,12 +504,91 @@ const Templates = () => {
     [toggleActiveMutation.isPending]
   );
 
+  // Filter templates for invite flow (only email templates that are active)
+  const availableInviteTemplates = useMemo(() => {
+    if (!isInviteFlow) return [];
+    return templates.filter(t => t.channel === 'email' && t.is_active);
+  }, [templates, isInviteFlow]);
+
+  // Auto-select first template if in invite flow
+  useEffect(() => {
+    if (isInviteFlow && availableInviteTemplates.length > 0 && !selectedInviteTemplate) {
+      setSelectedInviteTemplate(availableInviteTemplates[0].id.toString());
+    }
+  }, [isInviteFlow, availableInviteTemplates, selectedInviteTemplate]);
+
   const { preview, subjectPreview } = renderPreview();
   const modalTitle = editingTemplate ? `Edit ${editingTemplate.name}` : 'Create New Template';
 
   return (
     <AppShell>
       <div className="max-w-7xl mx-auto">
+        {/* Invite Flow Banner */}
+        {isInviteFlow && (
+          <div className="mb-6 bg-gradient-to-r from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10 border-2 border-primary/30 rounded-xl p-6">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="material-symbols-outlined text-primary text-2xl">mail</span>
+                  <h2 className="text-xl font-bold text-foreground-light dark:text-foreground-dark">
+                    Send Invite to Staff Member
+                  </h2>
+                </div>
+                <p className="text-subtle-light dark:text-subtle-dark mb-4">
+                  Select a template to send an invite email to <span className="font-semibold text-foreground-light dark:text-foreground-dark">{inviteStaffName}</span> ({inviteStaffEmail})
+                </p>
+                {availableInviteTemplates.length === 0 ? (
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                    <p className="text-yellow-800 dark:text-yellow-200 text-sm">
+                      No active email templates available. Please create an email template first.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <Select
+                      label="Select Email Template"
+                      value={selectedInviteTemplate}
+                      onChange={(e) => setSelectedInviteTemplate(e.target.value)}
+                      placeholder="Select a template..."
+                      options={availableInviteTemplates.map((template) => ({
+                        value: template.id.toString(),
+                        label: template.name,
+                      }))}
+                      required
+                    />
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleSendInvite}
+                        disabled={!selectedInviteTemplate || sendInviteMutation.isPending}
+                        className="h-11 px-6 rounded-lg font-semibold bg-green-600 text-white shadow-soft hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      >
+                        {sendInviteMutation.isPending ? (
+                          <>
+                            <Spinner size="sm" />
+                            <span>Sending...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="material-symbols-outlined text-base">send</span>
+                            <span>Send Invite</span>
+                          </>
+                        )}
+                      </button>
+                      <button
+                        onClick={() => navigate(-1)}
+                        disabled={sendInviteMutation.isPending}
+                        className="h-11 px-6 rounded-lg font-semibold bg-background-light dark:bg-background-dark border border-border-light dark:border-border-dark text-foreground-light dark:text-foreground-dark hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <div>
@@ -480,17 +599,19 @@ const Templates = () => {
               Manage communication templates for appointments and notifications
             </p>
           </div>
-          <button
-            onClick={() => {
-              resetForm();
-              setEditingTemplate(null);
-              setIsCreateModalOpen(true);
-            }}
-            className="h-11 px-4 rounded-lg font-semibold bg-primary text-white shadow-soft hover:bg-primary/90 transition-colors flex items-center gap-2"
-          >
-            <span className="material-symbols-outlined text-base">add</span>
-            <span>Create Template</span>
-          </button>
+          {!isInviteFlow && (
+            <button
+              onClick={() => {
+                resetForm();
+                setEditingTemplate(null);
+                setIsCreateModalOpen(true);
+              }}
+              className="h-11 px-4 rounded-lg font-semibold bg-primary text-white shadow-soft hover:bg-primary/90 transition-colors flex items-center gap-2"
+            >
+              <span className="material-symbols-outlined text-base">add</span>
+              <span>Create Template</span>
+            </button>
+          )}
         </div>
 
         {/* Table */}

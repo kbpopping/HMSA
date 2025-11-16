@@ -955,6 +955,8 @@ export const MockAPI = {
         phone: payload.phone,
         role: payload.role || 'Clinician',
         created_at: new Date().toISOString(),
+        password_set: false, // New staff members don't have password set yet
+        needs_invite: true, // New staff members need to be invited
       };
       mockClinicians.push(newClinician);
       // Update staff count for the role
@@ -976,6 +978,23 @@ export const MockAPI = {
           role.staffCount = mockClinicians.filter(c => c.role === role.name).length;
         });
       }
+      return { ok: true };
+    },
+
+    deleteClinician: async (hospitalId: string, clinicianId: string) => {
+      await delay(500);
+      const index = mockClinicians.findIndex(c => c.id === Number(clinicianId));
+      if (index === -1) throw new Error('Clinician not found');
+      const clinician = mockClinicians[index];
+      
+      // Remove from array
+      mockClinicians.splice(index, 1);
+      
+      // Update staff count for roles
+      mockStaffRoles.forEach(role => {
+        role.staffCount = mockClinicians.filter(c => c.role === role.name).length;
+      });
+      
       return { ok: true };
     },
 
@@ -1155,6 +1174,101 @@ export const MockAPI = {
       if (index === -1) throw new Error('Template not found');
       mockTemplates.splice(index, 1);
       return { ok: true };
+    },
+
+    // Staff Password and Invite Management
+    setStaffPassword: async (hospitalId: string, staffId: string, payload: any) => {
+      await delay(500);
+      const index = mockClinicians.findIndex(c => c.id === Number(staffId));
+      if (index === -1) throw new Error('Staff member not found');
+      
+      // Store password in localStorage (in production, this would be hashed and stored in database)
+      try {
+        const passwordData = JSON.parse(localStorage.getItem('staff_passwords') || '{}');
+        passwordData[staffId] = payload.password; // In production, hash this password
+        localStorage.setItem('staff_passwords', JSON.stringify(passwordData));
+      } catch (e) {
+        console.warn('Failed to store password in localStorage:', e);
+      }
+      
+      // Update clinician to mark password as set
+      mockClinicians[index].password_set = true;
+      
+      return { ok: true };
+    },
+
+    sendStaffInvite: async (hospitalId: string, staffId: string, payload: any) => {
+      await delay(800);
+      const index = mockClinicians.findIndex(c => c.id === Number(staffId));
+      if (index === -1) throw new Error('Staff member not found');
+      
+      const clinician = mockClinicians[index];
+      if (!clinician.email) {
+        throw new Error('Staff member does not have an email address');
+      }
+      
+      // Find the template
+      const template = mockTemplates.find(t => t.id === Number(payload.templateId));
+      if (!template) {
+        throw new Error('Template not found');
+      }
+      
+      if (!template.is_active) {
+        throw new Error('Template is not active');
+      }
+      
+      // Replace template variables with actual data
+      let subject = template.subject || '';
+      let body = template.body_text;
+      
+      // Sample data for template replacement (in production, use actual staff data)
+      const templateData: Record<string, string> = {
+        staff_name: clinician.name,
+        staff_email: clinician.email,
+        hospital_name: 'Hospital Management System', // In production, get from hospital data
+        password: payload.password || '[Password will be sent separately]',
+        login_url: 'https://hospital.example.com/login', // In production, use actual login URL
+      };
+      
+      // Replace variables in subject and body
+      Object.entries(templateData).forEach(([key, value]) => {
+        const regex = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
+        subject = subject.replace(regex, value);
+        body = body.replace(regex, value);
+      });
+      
+      // In production, this would actually send the email via email service
+      // For mock, we'll just log it and add to outbound queue
+      console.log('Sending invite email:', {
+        to: clinician.email,
+        subject,
+        body,
+        template: template.name,
+      });
+      
+      // Add to outbound queue for tracking
+      const queueItem: OutboundQueueItem = {
+        id: mockOutboundQueue.length + 1,
+        appointment_id: 0, // Not applicable for invites
+        patient_id: 0, // Not applicable for invites
+        patient_name: '',
+        clinician_id: clinician.id,
+        clinician_name: clinician.name,
+        channel: template.channel,
+        provider: 'email', // Default to email for invites
+        status: 'sent',
+        attempts: 1,
+        created_at: new Date().toISOString(),
+      };
+      mockOutboundQueue.push(queueItem);
+      
+      // Mark invite as sent (no longer needs invite)
+      mockClinicians[index].needs_invite = false;
+      
+      return { 
+        ok: true, 
+        message: `Invite sent successfully to ${clinician.email}` 
+      };
     },
     
     listOutboundQueue: async (hospitalId: string) => {

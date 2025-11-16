@@ -8,6 +8,7 @@ import { HospitalAPI, Clinician, StaffEmploymentFinancial, StaffMedicalInfo, Sta
 import { useAuth } from '../../store/auth';
 import TextField from '../../components/forms/TextField';
 import PhoneField from '../../components/forms/PhoneField';
+import PasswordField from '../../components/forms/PasswordField';
 import DateTimePicker from '../../components/forms/DateTimePicker';
 import Select from '../../components/forms/Select';
 import Spinner from '../../components/feedback/Spinner';
@@ -3081,6 +3082,11 @@ const StaffProfile = () => {
   const [isUploadingPicture, setIsUploadingPicture] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showUpdateWizard, setShowUpdateWizard] = useState(false);
+  
+  // Password and invite state
+  const [staffPassword, setStaffPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   // Fetch all staff to find the specific member
   const { data: allStaff = [], isLoading, error } = useQuery<Clinician[]>({
@@ -3152,6 +3158,54 @@ const StaffProfile = () => {
       toast.error(error.message || 'Failed to upload profile picture');
     },
   });
+
+  // Set password mutation
+  const setPasswordMutation = useMutation({
+    mutationFn: (password: string) => {
+      if (!staffId) throw new Error('Staff ID is required');
+      return HospitalAPI.setStaffPassword(hospitalId, staffId, { password });
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['hospital', 'clinicians'], exact: false });
+      setStaffPassword('');
+      setConfirmPassword('');
+      toast.success('Password set successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error.message || 'Failed to set password');
+    },
+  });
+
+  // Handle set password
+  const handleSetPassword = () => {
+    if (!staffPassword.trim()) {
+      toast.error('Password is required');
+      return;
+    }
+    if (staffPassword.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+    if (staffPassword !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    setPasswordMutation.mutate(staffPassword);
+  };
+
+  // Handle send invite - navigate to Templates page with staff info
+  const handleSendInvite = () => {
+    if (!staffPassword.trim()) {
+      toast.error('Please set a password first before sending invite');
+      return;
+    }
+    if (!staffMember?.email) {
+      toast.error('Staff member does not have an email address');
+      return;
+    }
+    // Navigate to Templates page with query params for invite flow
+    navigate(`/hospital/templates?invite=true&staffId=${staffId}&staffName=${encodeURIComponent(staffMember.name)}&staffEmail=${encodeURIComponent(staffMember.email)}&password=${encodeURIComponent(staffPassword)}`);
+  };
 
   // Handle file upload
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -3482,6 +3536,76 @@ const StaffProfile = () => {
                   )}
                 </label>
               </div>
+
+              {/* Password & Invite Card - Only show for new staff */}
+              {(staffMember?.needs_invite || !staffMember?.password_set) && (
+                <div className="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-soft border-2 border-primary/20">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="material-symbols-outlined text-primary text-xl">person_add</span>
+                    <h3 className="text-xl font-semibold text-foreground-light dark:text-foreground-dark">
+                      Set Password & Send Invite
+                    </h3>
+                  </div>
+                  <p className="text-sm text-subtle-light dark:text-subtle-dark mb-4">
+                    Set a login password for this staff member and send them an invite email to access their portal.
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <PasswordField
+                      label="Set Password"
+                      value={staffPassword}
+                      onChange={(e) => setStaffPassword(e.target.value)}
+                      placeholder="Enter password (min. 6 characters)"
+                      required
+                    />
+                    <PasswordField
+                      label="Confirm Password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Confirm password"
+                      required
+                    />
+                    
+                    <div className="flex flex-col gap-2 pt-2">
+                      <button
+                        onClick={handleSetPassword}
+                        disabled={setPasswordMutation.isPending || !staffPassword || !confirmPassword}
+                        className="h-11 px-4 rounded-lg font-semibold bg-primary text-white shadow-soft hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        {setPasswordMutation.isPending ? (
+                          <>
+                            <Spinner size="sm" />
+                            <span>Setting Password...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span className="material-symbols-outlined text-base">lock</span>
+                            <span>Set Password</span>
+                          </>
+                        )}
+                      </button>
+                      
+                      <button
+                        onClick={handleSendInvite}
+                        disabled={!staffPassword || setPasswordMutation.isPending || !staffMember?.email}
+                        className="h-11 px-4 rounded-lg font-semibold bg-green-600 text-white shadow-soft hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        <span className="material-symbols-outlined text-base">mail</span>
+                        <span>Send Invite</span>
+                      </button>
+                    </div>
+                    
+                    {staffMember?.password_set && (
+                      <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                        <p className="text-sm text-green-700 dark:text-green-300 flex items-center gap-2">
+                          <span className="material-symbols-outlined text-base">check_circle</span>
+                          Password has been set
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}

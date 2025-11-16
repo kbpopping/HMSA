@@ -39,6 +39,9 @@ export type Clinician = {
   qualifications?: string;
   date_joined?: string; // Date when staff joined the hospital
   profile_picture?: string; // Base64 data URL or image URL
+  // Invite and password management
+  password_set?: boolean; // Whether password has been set for this staff member
+  needs_invite?: boolean; // Whether staff member needs to be invited
 };
 
 export type StaffEmploymentFinancial = {
@@ -539,6 +542,11 @@ export const HospitalAPI = {
       json: payload,
     }),
 
+  deleteClinician: (hospitalId: string, clinicianId: string) =>
+    apiFetch<{ ok: true }>(`/api/hospitals/${hospitalId}/clinicians/${clinicianId}`, {
+      method: 'DELETE',
+    }),
+
   uploadStaffProfilePicture: (hospitalId: string, staffId: string, file: File) => {
     const formData = new FormData();
     formData.append('profile_picture', file);
@@ -671,6 +679,32 @@ export const HospitalAPI = {
     apiFetch<{ ok: true }>(
       `/api/hospitals/${hospitalId}/templates/${templateId}`,
       { method: 'DELETE' }
+    ),
+
+  // Staff Password and Invite Management
+  setStaffPassword: (
+    hospitalId: string,
+    staffId: string,
+    payload: {
+      password: string;
+    }
+  ) =>
+    apiFetch<{ ok: true }>(
+      `/api/hospitals/${hospitalId}/clinicians/${staffId}/password`,
+      { method: 'POST', json: payload }
+    ),
+
+  sendStaffInvite: (
+    hospitalId: string,
+    staffId: string,
+    payload: {
+      templateId: string;
+      password?: string; // Optional password to include in invite
+    }
+  ) =>
+    apiFetch<{ ok: true; message: string }>(
+      `/api/hospitals/${hospitalId}/clinicians/${staffId}/invite`,
+      { method: 'POST', json: payload }
     ),
   
   listOutboundQueue: (hospitalId: string) =>
